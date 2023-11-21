@@ -24,6 +24,7 @@ To deploy the above logic app, you need to<br>
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FPlaybooks%2FCopilot-Sentinel_investigation-DynamicSev%2Fazuredeploy.json" target="_blank">
     <img src="https://aka.ms/deploytoazurebutton"/>
 </a>
+<br>
 ### Post Deployment
 
 •   Authenticate with the users mention above (you can use different user for the Copilot actions and to the sentinel actions)<br>
