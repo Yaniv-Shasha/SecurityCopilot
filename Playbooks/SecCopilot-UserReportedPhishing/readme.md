@@ -41,3 +41,21 @@ To deploy the above logic app, you need to<br>
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSentinel%2Fmaster%2FPlaybooks%2FSec-Copilot-UserReportedPhishing%2Fazuredeploy.json" target="_blank">
     <img src="https://aka.ms/deploytoazurebutton"/>
+
+
+###  Full Logic App view
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8ffa89a6dd404ae62881b2ff9b7f0bfb96718a4a/Playbooks/SecCopilot-UserReportedPhishing/images/full_logic_app.jpg"/>
+
+
+###  Phishing condition  
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8ffa89a6dd404ae62881b2ff9b7f0bfb96718a4a/Playbooks/SecCopilot-UserReportedPhishing/images/conditations.jpg"/>
+
+###  Notification Email Send 
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8ffa89a6dd404ae62881b2ff9b7f0bfb96718a4a/Playbooks/SecCopilot-UserReportedPhishing/images/email_results.jpg"/>
+
+###  Sentinel Incident
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8ffa89a6dd404ae62881b2ff9b7f0bfb96718a4a/Playbooks/SecCopilot-UserReportedPhishing/images/sentinel%20incident.jpg"/>
