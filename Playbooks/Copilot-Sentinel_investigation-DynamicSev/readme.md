@@ -11,10 +11,15 @@ the automation will write the full investigation reports and the incident classi
 ### Prerequisites
 
 Prior to beginning the installation process, it's crucial to confirm that you have met the following prerequisites: <br>
-• The user that will deploy this Logic app need to have Contributor Role.<br>
+• The user that will deploy this Logic app need to have a Contributor Role.<br>
 • You enabled the Security Copilot license on your tenant <br>
 • The user that authenticted in the Copilot logic app action, need to have Security Admin permission and Microsoft sentinel contributer (as its need to create incident comment).<br>
+
+https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/copilot_auth.jpg<br>
+
 • This logic app can be run in a manual way, or in automatic way, if you select the automated way, you will need to create a new automation rule in Sentinel and configure this logic app as an action.<br>
+
+https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/Sentinel_auth.jpg<br>
 
 ### Deployment 
 
