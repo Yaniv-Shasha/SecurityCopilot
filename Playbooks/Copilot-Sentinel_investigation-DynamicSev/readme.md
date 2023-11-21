@@ -1,8 +1,10 @@
 # Copilot-Sentinelinvestigation-DynamicSev
-author: Yaniv Shasha
+Author: Yaniv Shasha
 
 
-By clicking deploy above you will deploy an Azure Logic App with Security Copilot Actions that will use Microsoft Sentinel incident trigger, this logic app will change the status of the incident for active, will create dynamic tags (labels) and ill add them into sentinel incident tags, also this automation will calculate the incident severity based on MDTI enrichment and will modify the incident severity.
+
+By clicking deploy above you will deploy an Azure Logic App with Security Copilot Actions that will use Microsoft Sentinel incident trigger.<br>
+This Logic app will change the status of the incident for active, will create dynamic tags (labels) and ill add them into sentinel incident tags, also this automation will calculate the incident severity based on MDTI enrichment and will modify the incident severity.
 the automation will write the full investigation reports and the incident classification logic in the sentinel incident comment.<br>
 
 
@@ -17,6 +19,12 @@ Prior to beginning the installation process, it's crucial to confirm that you ha
 ### Deployment 
 
 To deploy the above logic app, you need to<br>
-•	Press on the Deplot opetion, select your subscription and the respource group (this need to be resource under the same tenant that Security Copilot is enabled<br>
-•	select .<br>
-•	Workbook – act as the presentation layer.<br>
+•   Press on the Deploy option, select your subscription and the resource group (select the same tenant that Security Copilot is enabled)<br>
+
+### Post Deployment
+
+•   Authenticate with the users mention above (you can use different user for the Copilot actions and to the sentinel actions)<br>
+•   To run the logic app in a manual way, open Microsoft Sentinel incident page, right click on specific incident and press run playbook, select logic app you just deploy and press run.<br>
+•   To run the logic in automatic way, create an automation rule in sentinel and connect this playbook as the action for this rule.<br>
+
+
