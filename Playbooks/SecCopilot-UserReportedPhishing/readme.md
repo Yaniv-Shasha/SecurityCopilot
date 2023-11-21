@@ -25,6 +25,8 @@ Prior to beginning the installation process, it's crucial to confirm that you ha
 
 <br>
 
+<br>
+
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/copilot_auth.jpg"/>
 
 <br>
