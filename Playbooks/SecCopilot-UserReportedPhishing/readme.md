@@ -32,7 +32,7 @@ Additionally, if the phishing probability exceeds 75%, a Sentinel Incident will 
 
 <br>
 
-• This logic app can be run in a manual way, or in automatic way, if you select the automated way, you will need to create a new automation rule in Sentinel and configure this logic app as an action.<br>
+
 
 ### Deployment 
 
