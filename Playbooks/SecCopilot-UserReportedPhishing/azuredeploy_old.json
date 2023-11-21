@@ -5,14 +5,9 @@
         "PlaybookName":  {
             "defaultValue":  "Sec-Copilot-UserReportedPhishing",
             "type":  "string"
-        },
-         "EmailTo": {
-            "defaultValue": "",
-            "type": "String"
         }
     },
     "variables":  {
-        "MicrosoftSentinelConnectionName":  "[concat('MicrosoftSentinel-', parameters('PlaybookName'))]",
         "Office365ConnectionName":  "[concat('Office365-', parameters('PlaybookName'))]",
         "SecuritycopilotConnectionName":  "[concat('Securitycopilot-', parameters('PlaybookName'))]"
     },
@@ -42,7 +37,7 @@
                                         "template":  "/v3/Mail/OnNewEmail"
                                     },
                                     "queries":  {
-                                        "fetchOnlyWithAttachment":  false,
+                                        "fetchOnlyWithAttachment":  true,
                                         "folderPath":  "Inbox",
                                         "importance":  "Any",
                                         "includeAttachments":  false
@@ -62,7 +57,7 @@
                                         "template":  "/GraphMailSubscriptionPoke/$subscriptions"
                                     },
                                     "queries":  {
-                                        "fetchOnlyWithAttachment":  false,
+                                        "fetchOnlyWithAttachment":  true,
                                         "folderPath":  "Inbox",
                                         "importance":  "Any"
                                     }
@@ -71,93 +66,6 @@
                         }
                     },
                     "actions":  {
-                        "Condition":  {
-                            "actions":  {
-                                "Create_incident":  {
-                                    "runAfter":  {
-                                        "Send_an_email_(V2)_2":  [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type":  "ApiConnection",
-                                    "inputs":  {
-                                        "body":  {
-                                            "description":  "@body('Create_HTML_table')",
-                                            "severity":  "High",
-                                            "status":  "New",
-                                            "title":  "Copilot Investigation for user reported phishing- Phising certainty is @{decimal(variables('percentage number var'))}%"
-                                        },
-                                        "host":  {
-                                            "connection":  {
-                                                "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
-                                            }
-                                        },
-                                        "method":  "put",
-                                        "path":  "/Incidents/subscriptions/@{encodeURIComponent('ab48f397-fc82-4634-aa52-62dd91b3ebaa')}/resourceGroups/@{encodeURIComponent('Woodgrove-RG')}/workspaces/@{encodeURIComponent('Woodgrove-LogAnalyiticsWorkspace')}"
-                                    }
-                                },
-                                "Send_an_email_(V2)_2":  {
-                                    "runAfter":  {
-                                    },
-                                    "type":  "ApiConnection",
-                                    "inputs":  {
-                                        "body":  {
-                                            "Body":  "\u003cp\u003e@{body('Create_HTML_table')}\u003c/p\u003e",
-                                            "Importance":  "High",
-                                            "Subject":  "Copilot Phishing Report - Phishing Score is @{decimal(variables('percentage number var'))}%",
-                                            "To":  "[parameters('EmailTo')]"
-                                        },
-                                        "host":  {
-                                            "connection":  {
-                                                "name":  "@parameters('$connections')['office365']['connectionId']"
-                                            }
-                                        },
-                                        "method":  "post",
-                                        "path":  "/v2/Mail"
-                                    }
-                                }
-                            },
-                            "runAfter":  {
-                                "Create_HTML_table":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "else":  {
-                                "actions":  {
-                                    "Send_an_email_(V2)":  {
-                                        "runAfter":  {
-                                        },
-                                        "type":  "ApiConnection",
-                                        "inputs":  {
-                                            "body":  {
-                                                "Body":  "\u003cp\u003e@{body('Create_HTML_table')}\u003c/p\u003e",
-                                                "Importance":  "Normal",
-                                                "Subject":  "Copilot Phishing Report - Phishing Score is @{decimal(variables('percentage number var'))}",
-                                                "To":  "yanivsh@microsoft.com"
-                                            },
-                                            "host":  {
-                                                "connection":  {
-                                                    "name":  "@parameters('$connections')['office365']['connectionId']"
-                                                }
-                                            },
-                                            "method":  "post",
-                                            "path":  "/v2/Mail"
-                                        }
-                                    }
-                                }
-                            },
-                            "expression":  {
-                                "and":  [
-                                    {
-                                        "greater":  [
-                                            "@decimal(variables('percentage number var'))",
-                                            74
-                                        ]
-                                    }
-                                ]
-                            },
-                            "type":  "If"
-                        },
                         "Create_HTML_table":  {
                             "runAfter":  {
                                 "Select":  [
@@ -180,66 +88,8 @@
                             "inputs":  {
                                 "body":  {
                                     "PromptContent":  "Return the reputation for all the domain your shared",
-                                    "SessionId":  "@body('_indicators_within_the_email')?['sessionId']"
-                                },
-                                "host":  {
-                                    "connection":  {
-                                        "name":  "@parameters('$connections')['securitycopilot']['connectionId']"
-                                    }
-                                },
-                                "method":  "post",
-                                "path":  "/process-prompt"
-                            }
-                        },
-                        "IP's_reputation_MDTI":  {
-                            "runAfter":  {
-                                "Domain_reputation_MDTI":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "ApiConnection",
-                            "inputs":  {
-                                "body":  {
-                                    "PromptContent":  "if you found IP address as indictors, please return the reputation for all the Ip's your shared.",
-                                    "SessionId":  "@body('Domain_reputation_MDTI')?['sessionId']"
-                                },
-                                "host":  {
-                                    "connection":  {
-                                        "name":  "@parameters('$connections')['securitycopilot']['connectionId']"
-                                    }
-                                },
-                                "method":  "post",
-                                "path":  "/process-prompt"
-                            }
-                        },
-                        "Initialize_variable":  {
-                            "runAfter":  {
-                                "Parse_JSON-percentage_number":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "InitializeVariable",
-                            "inputs":  {
-                                "variables":  [
-                                    {
-                                        "name":  "percentage number var",
-                                        "type":  "string",
-                                        "value":  "@body('Parse_JSON-percentage_number')?['Evaluation Result Content']"
-                                    }
-                                ]
-                            }
-                        },
-                        "KQL_Who_else_click_on_this_Email":  {
-                            "runAfter":  {
-                                "KQL_sent_to_other_users":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "ApiConnection",
-                            "inputs":  {
-                                "body":  {
-                                    "PromptContent":  "/LookupDataFromDefender365Hunting Base on the email title, and the sender email address, check if other users in the organization click on the link inside the email? ignore the Url \"https://security.microsoft.com/userSubmissionsReportMessage\"",
-                                    "SessionId":  "@body('KQL_sent_to_other_users')?['sessionId']"
+                                    "SessionId":  "@body('_indicators_within_the_email')?['sessionId']",
+                                    "SkillName":  "GetReputationsByHostnames"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -260,7 +110,29 @@
                             "inputs":  {
                                 "body":  {
                                     "PromptContent":  "/LookupDataFromDefender365Hunting Base on the email title check if this email sent to other users in my organization?",
-                                    "SessionId":  "@body('sender_and_return_path_email')?['sessionId']"
+                                    "SessionId":  "@body('sender_and_return_path_email')?['sessionId']",
+                                    "SkillName":  "GetTiArticlesBySearch"
+                                },
+                                "host":  {
+                                    "connection":  {
+                                        "name":  "@parameters('$connections')['securitycopilot']['connectionId']"
+                                    }
+                                },
+                                "method":  "post",
+                                "path":  "/process-prompt"
+                            }
+                        },
+                        "KQl_Who_else_click_on_this_Email":  {
+                            "runAfter":  {
+                                "KQL_sent_to_other_users":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ApiConnection",
+                            "inputs":  {
+                                "body":  {
+                                    "PromptContent":  "/LookupDataFromDefender365Hunting Base on the email title, and the sender email address, check if other users in the organization click on the link inside the email? ignore the Url \"https://security.microsoft.com/userSubmissionsReportMessage\"",
+                                    "SessionId":  "@body('KQL_sent_to_other_users')?['sessionId']"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -332,38 +204,6 @@
                                 }
                             }
                         },
-                        "Parse_JSON-percentage_number":  {
-                            "runAfter":  {
-                                "report_answer":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "ParseJson",
-                            "inputs":  {
-                                "content":  "@body('percentage_number')",
-                                "schema":  {
-                                    "properties":  {
-                                        "Evaluation Result Content":  {
-                                            "type":  "string"
-                                        },
-                                        "Evaluation Result Type":  {
-                                            "type":  "string"
-                                        },
-                                        "Next Prompt Suggestions":  {
-                                        },
-                                        "Prompt Content":  {
-                                            "type":  "string"
-                                        },
-                                        "SessionId":  {
-                                            "type":  "string"
-                                        },
-                                        "Skill Name":  {
-                                        }
-                                    },
-                                    "type":  "object"
-                                }
-                            }
-                        },
                         "Parse_JSON_2":  {
                             "runAfter":  {
                                 "Summaries_findings":  [
@@ -398,7 +238,7 @@
                         },
                         "Select":  {
                             "runAfter":  {
-                                "Initialize_variable":  [
+                                "report_answer":  [
                                     "Succeeded"
                                 ]
                             },
@@ -411,18 +251,40 @@
                                 }
                             }
                         },
-                        "Summaries_findings":  {
+                        "Send_an_email_(V2)":  {
                             "runAfter":  {
-                                "KQL_Who_else_click_on_this_Email":  [
+                                "Create_HTML_table":  [
                                     "Succeeded"
                                 ]
                             },
                             "type":  "ApiConnection",
                             "inputs":  {
                                 "body":  {
-                                    "PromptContent":  "Base on the above email investigation, summarize this investigation with all the investigation steps that taken during this session share also supported evidence and let me know if this is a phishing email, also share certainty percentage: if the email is not suspicious give it 0-30% if it medium suspicious  for phishing give it 30%-74% and if its high suspicious as phishing give it 75%-100%, allways include suspicious certainty percentage.",
-                                    "SessionId":  "@body('KQL_Who_else_click_on_this_Email')?['sessionId']",
-                                    "SkillName":  "SummarizeData"
+                                    "Body":  "\u003cp\u003e@{body('Create_HTML_table')}\u003c/p\u003e",
+                                    "Importance":  "Normal",
+                                    "Subject":  "User reported Phishing Security Copilot investigation",
+                                    "To":  ""
+                                },
+                                "host":  {
+                                    "connection":  {
+                                        "name":  "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method":  "post",
+                                "path":  "/v2/Mail"
+                            }
+                        },
+                        "Summaries_findings":  {
+                            "runAfter":  {
+                                "KQl_Who_else_click_on_this_Email":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ApiConnection",
+                            "inputs":  {
+                                "body":  {
+                                    "PromptContent":  "Base on the above email investigation, summarize this investigation with all the investigation steps that taken during this session share also supported evidence and let me know if this is a phshing email, also share certainty percentage",
+                                    "SessionId":  "@body('KQl_Who_else_click_on_this_Email')?['sessionId']"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -462,29 +324,8 @@
                             "type":  "ApiConnection",
                             "inputs":  {
                                 "body":  {
-                                    "PromptContent":  "Please list for me all the technical indicators within the email that should be investigated. don't include https://security.microsoft.com/userSubmissionsReportMessage as indicator",
+                                    "PromptContent":  "Please list for me all the technical indicators within the email that should be investigated. this url https://security.microsoft.com/userSubmissionsReportMessage is internal url, dont incluce it in the analsys",
                                     "SessionId":  "@body('Triage_this_email')?['sessionId']"
-                                },
-                                "host":  {
-                                    "connection":  {
-                                        "name":  "@parameters('$connections')['securitycopilot']['connectionId']"
-                                    }
-                                },
-                                "method":  "post",
-                                "path":  "/process-prompt"
-                            }
-                        },
-                        "percentage_number":  {
-                            "runAfter":  {
-                                "Parse_JSON_2":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "ApiConnection",
-                            "inputs":  {
-                                "body":  {
-                                    "PromptContent":  "Based on this investigation, share certainty percentage. only respond with the a number, only one token no more",
-                                    "SessionId":  "@body('Summaries_findings')?['sessionId']"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -497,7 +338,7 @@
                         },
                         "report_answer":  {
                             "runAfter":  {
-                                "percentage_number":  [
+                                "Parse_JSON_2":  [
                                     "Succeeded"
                                 ]
                             },
@@ -535,14 +376,14 @@
                         },
                         "summarize_the_Article":  {
                             "runAfter":  {
-                                "IP's_reputation_MDTI":  [
+                                "Domain_reputation_MDTI":  [
                                     "Succeeded"
                                 ]
                             },
                             "type":  "ApiConnection",
                             "inputs":  {
                                 "body":  {
-                                    "PromptContent":  "Check if we have MDTI articles the associated with this domain? if you found summarize them.",
+                                    "PromptContent":  "Could you summarize the article associated with this domain?",
                                     "SessionId":  "@body('Domain_reputation_MDTI')?['sessionId']"
                                 },
                                 "host":  {
@@ -561,11 +402,6 @@
                 "parameters":  {
                     "$connections":  {
                         "value":  {
-                            "azuresentinel":  {
-                                "connectionId":  "[resourceId('Microsoft.Web/connections', variables('MicrosoftSentinelConnectionName'))]",
-                                "connectionName":  "[variables('MicrosoftSentinelConnectionName')]",
-                                "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Azuresentinel')]"
-                            },
                             "office365":  {
                                 "connectionId":  "[resourceId('Microsoft.Web/connections', variables('Office365ConnectionName'))]",
                                 "connectionName":  "[variables('Office365ConnectionName')]",
@@ -590,25 +426,9 @@
             },
             "apiVersion":  "2017-07-01",
             "dependsOn":  [
-                "[resourceId('Microsoft.Web/connections', variables('MicrosoftSentinelConnectionName'))]",
                 "[resourceId('Microsoft.Web/connections', variables('Office365ConnectionName'))]",
                 "[resourceId('Microsoft.Web/connections', variables('SecuritycopilotConnectionName'))]"
             ]
-        },
-        {
-            "type":  "Microsoft.Web/connections",
-            "apiVersion":  "2016-06-01",
-            "name":  "[variables('MicrosoftSentinelConnectionName')]",
-            "location":  "[resourceGroup().location]",
-            "kind":  "V1",
-            "properties":  {
-                "displayName":  "[variables('MicrosoftSentinelConnectionName')]",
-                "customParameterValues":  {
-                },
-                "api":  {
-                    "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Azuresentinel')]"
-                }
-            }
         },
         {
             "type":  "Microsoft.Web/connections",
