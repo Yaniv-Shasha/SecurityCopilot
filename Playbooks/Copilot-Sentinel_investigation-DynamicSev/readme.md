@@ -25,6 +25,7 @@ To deploy the above logic app, you need to<br>
     <img src="https://aka.ms/deploytoazurebutton"/>
 </a>
 <br>
+
 ### Post Deployment
 
 •   Authenticate with the users mention above (you can use different user for the Copilot actions and to the sentinel actions)<br>
