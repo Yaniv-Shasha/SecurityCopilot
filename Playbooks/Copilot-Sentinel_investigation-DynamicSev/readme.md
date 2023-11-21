@@ -3,7 +3,7 @@ Author: Yaniv Shasha
 
 ### As of this moment, please deploy this logic app in West-US-2 region
 
-By clicking deploy, you will deploy an Azure Logic App with Security Copilot Actions that will use Microsoft Sentinel incident trigger.<br>
+By clicking deploy, you will deploy an Azure Logic App on top of Security Copilot Actions that will use Microsoft Sentinel incident trigger.<br>
 This Logic app will change the status of the incident for active, will create dynamic tags (labels) and ill add them into sentinel incident tags, also this automation will calculate the incident severity based on MDTI enrichment and will modify the incident severity.
 the automation will write the full investigation reports and the incident classification logic in the sentinel incident comment.<br>
 
@@ -19,9 +19,12 @@ Prior to beginning the installation process, it's crucial to confirm that you ha
 
 <br>
 
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/Sentinel_auth.jpg"/>
+
+<br>
+
 • This logic app can be run in a manual way, or in automatic way, if you select the automated way, you will need to create a new automation rule in Sentinel and configure this logic app as an action.<br>
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/Sentinel_auth.jpg"/>
 
 <br>
 
