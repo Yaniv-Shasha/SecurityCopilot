@@ -148,6 +148,27 @@
                                 "path":  "/evaluations/prompt"
                             }
                         },
+                        "GetIntuneDevices2":  {
+                            "runAfter":  {
+                                "GetIntuneDevices":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ApiConnection",
+                            "inputs":  {
+                                "body":  {
+                                    "PromptContent":  "/GetIntuneDevices If any devices are listed in the previous output, show details from Intune on the one that checked in most recently. Especially indicate if it is current on all operating system updates.",
+                                    "SessionId":  "@body('GetIntuneDevices')?['sessionId']"
+                                },
+                                "host":  {
+                                    "connection":  {
+                                        "name":  "@parameters('$connections')['securitycopilot']['connectionId']"
+                                    }
+                                },
+                                "method":  "post",
+                                "path":  "/evaluations/prompt"
+                            }
+                        },
                         "GetReputationsByIpAddresses":  {
                             "runAfter":  {
                                 "GetIncidentEntities":  [
@@ -172,14 +193,14 @@
                         },
                         "GetSentinelIncident":  {
                             "runAfter":  {
-                                "Parse_JSON":  [
+                                "Parse_JSON-Incident":  [
                                     "Succeeded"
                                 ]
                             },
                             "type":  "ApiConnection",
                             "inputs":  {
                                 "body":  {
-                                    "PromptContent":  "/GetSentinelIncident Summarize Sentinel Incident @{body('Parse_JSON')?['object']?['properties']?['incidentNumber']}"
+                                    "PromptContent":  "/GetSentinelIncident Summarize Sentinel Incident @{body('Parse_JSON-Incident')?['object']?['properties']?['incidentNumber']}"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -205,27 +226,6 @@
                                         "value":  "@body('Json_explain_classify')?['Evaluation Result Content']"
                                     }
                                 ]
-                            }
-                        },
-                        "Intune":  {
-                            "runAfter":  {
-                                "GetIntuneDevices":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "ApiConnection",
-                            "inputs":  {
-                                "body":  {
-                                    "PromptContent":  "/GetIntuneDevices If any devices are listed in the previous output, show details from Intune on the one that checked in most recently. Especially indicate if it is current on all operating system updates.",
-                                    "SessionId":  "@body('GetIntuneDevices')?['sessionId']"
-                                },
-                                "host":  {
-                                    "connection":  {
-                                        "name":  "@parameters('$connections')['securitycopilot']['connectionId']"
-                                    }
-                                },
-                                "method":  "post",
-                                "path":  "/evaluations/prompt"
                             }
                         },
                         "Json_explain_classify":  {
@@ -260,9 +260,9 @@
                                 }
                             }
                         },
-                        "Parse_JSON":  {
+                        "Parse_JSON-Incident":  {
                             "runAfter":  {
-                                "Update_incident_5":  [
+                                "Update_incident_Status":  [
                                     "Succeeded"
                                 ]
                             },
@@ -1586,13 +1586,13 @@
                         },
                         "Parse_JSON_3":  {
                             "runAfter":  {
-                                "classify":  [
+                                "classify_incident_":  [
                                     "Succeeded"
                                 ]
                             },
                             "type":  "ParseJson",
                             "inputs":  {
-                                "content":  "@body('classify')",
+                                "content":  "@body('classify_incident_')",
                                 "schema":  {
                                     "properties":  {
                                         "Evaluation Result Content":  {
@@ -1650,7 +1650,7 @@
                         },
                         "Report":  {
                             "runAfter":  {
-                                "Intune":  [
+                                "GetIntuneDevices2":  [
                                     "Succeeded"
                                 ]
                             },
@@ -1658,7 +1658,7 @@
                             "inputs":  {
                                 "body":  {
                                     "PromptContent":  "/SummarizeData Write a report based on this investigation. Lead with your assessment of the incident and supporting evidence for your conclusion with a confidence level, including whether or not this incident is likely to be a true positive. Conclude with a set of recommendations.",
-                                    "SessionId":  "@body('Intune')?['sessionId']"
+                                    "SessionId":  "@body('GetIntuneDevices2')?['sessionId']"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -1813,7 +1813,7 @@
                                         "type":  "ApiConnection",
                                         "inputs":  {
                                             "body":  {
-                                                "incidentArmId":  "@body('Update_incident_5')?['id']",
+                                                "incidentArmId":  "@body('Update_incident_Status')?['id']",
                                                 "status":  "Active"
                                             },
                                             "host":  {
@@ -1851,7 +1851,7 @@
                                 "path":  "/evaluations/prompt"
                             }
                         },
-                        "Update_incident_5":  {
+                        "Update_incident_Status":  {
                             "runAfter":  {
                             },
                             "type":  "ApiConnection",
@@ -1925,7 +1925,7 @@
                                 ]
                             }
                         },
-                        "classify":  {
+                        "classify_incident_":  {
                             "runAfter":  {
                                 "Report":  [
                                     "Succeeded"
@@ -1934,7 +1934,7 @@
                             "type":  "ApiConnection",
                             "inputs":  {
                                 "body":  {
-                                    "PromptContent":  "Based on this investigation details, classify this incident based on the following rules. If it appears malicious, label it as \"high\". If it appears suspicious, label it as \"medium\". If it is not clear, label it is \"unknown\". Respond with the label only. ",
+                                    "PromptContent":  "Based on this investigation details, classify this incident based on the following rules. If it appears malicious, label it as \"high\". If it appears suspicious, label it as \"medium\". If it is not clear, label it is \"low\". Respond with the label only. ",
                                     "SessionId":  "@body('Report')?['sessionId']"
                                 },
                                 "host":  {
@@ -1956,7 +1956,7 @@
                             "inputs":  {
                                 "body":  {
                                     "PromptContent":  "/SummarizeText Explain why you selected this classifiction. Format as bullet points?",
-                                    "SessionId":  "@body('classify')?['sessionId']"
+                                    "SessionId":  "@body('classify_incident_')?['sessionId']"
                                 },
                                 "host":  {
                                     "connection":  {
