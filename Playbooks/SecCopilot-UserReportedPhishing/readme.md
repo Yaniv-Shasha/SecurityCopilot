@@ -12,12 +12,13 @@ During this phase, Security Copilot examines the email to determine the likeliho
 Depending on the assessed risk level, the system will send a notification email.<br>
 Additionally, if the phishing probability exceeds 75%, a Sentinel Incident will be automatically generated.<br>
 
-### Prerequisites
 
-Prior to beginning the installation process, it's crucial to confirm that you have met the following prerequisites: <br>
-• The user that will deploy this Logic app need to have a Contributor Role.<br>
-• You enabled the Security Copilot license on your tenant <br>
-• The user that authenticted in the Copilot logic app action, need to have Security Admin permission and Microsoft sentinel contributer (as its need to create incident comment).<br>
+### Before starting the installation, ensure you have fulfilled these prerequisites:
+
+• The user deploying this Logic app must possess a Contributor Role.<br>
+• Activation of the Security Copilot license on your tenant is required.<br>
+• The user authenticated in the Copilot logic app action should have Security Admin permissions and the role of a Microsoft Sentinel contributor, as this is necessary for creating incident comments.<br>
+
  
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSentinel%2Fmaster%2FPlaybooks%2FSec-Copilot-UserReportedPhishing%2Fazuredeploy.json" target="_blank">
     <img src="https://aka.ms/deploytoazurebutton"/>
