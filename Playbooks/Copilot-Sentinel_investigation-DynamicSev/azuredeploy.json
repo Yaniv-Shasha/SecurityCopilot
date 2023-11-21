@@ -3,7 +3,7 @@
     "contentVersion":  "1.0.0.0",
     "parameters":  {
         "PlaybookName":  {
-            "defaultValue":  "Copilot-Sentinel_investigation-DynamicSev",
+            "defaultValue":  "Copilot-Sentinelinvestigation-DynamicSev",
             "type":  "string"
         }
     },
@@ -85,7 +85,28 @@
                                 "from":  "@body('Select')"
                             }
                         },
-                        "GetEntraUserDetails":  {
+                        "Explain_classify":  {
+                            "runAfter":  {
+                                "Switch":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ApiConnection",
+                            "inputs":  {
+                                "body":  {
+                                    "PromptContent":  "/SummarizeText Explain why you selected this classifiction. Format as bullet points?",
+                                    "SessionId":  "@body('classify_incident')?['sessionId']"
+                                },
+                                "host":  {
+                                    "connection":  {
+                                        "name":  "@parameters('$connections')['securitycopilot']['connectionId']"
+                                    }
+                                },
+                                "method":  "post",
+                                "path":  "/process-prompt"
+                            }
+                        },
+                        "GeUserDetails":  {
                             "runAfter":  {
                                 "GetReputationsByIpAddresses":  [
                                     "Succeeded"
@@ -103,7 +124,7 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/prompt"
+                                "path":  "/process-prompt"
                             }
                         },
                         "GetIncidentEntities":  {
@@ -124,12 +145,12 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/prompt"
+                                "path":  "/process-prompt"
                             }
                         },
                         "GetIntuneDevices":  {
                             "runAfter":  {
-                                "GetEntraUserDetails":  [
+                                "GeUserDetails":  [
                                     "Succeeded"
                                 ]
                             },
@@ -137,7 +158,7 @@
                             "inputs":  {
                                 "body":  {
                                     "PromptContent":  "/GetIntuneDevices If a user is listed in the incident details, show which devices they have used recently and indicate whether they are compliant with policies.",
-                                    "SessionId":  "@body('GetEntraUserDetails')?['sessionId']"
+                                    "SessionId":  "@body('GeUserDetails')?['sessionId']"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -145,7 +166,7 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/prompt"
+                                "path":  "/process-prompt"
                             }
                         },
                         "GetIntuneDevices2":  {
@@ -166,7 +187,7 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/prompt"
+                                "path":  "/process-prompt"
                             }
                         },
                         "GetReputationsByIpAddresses":  {
@@ -178,9 +199,8 @@
                             "type":  "ApiConnection",
                             "inputs":  {
                                 "body":  {
-                                    "PromptContent":  "What are the reputation score for the IPv4 addresses on that incident?",
-                                    "SessionId":  "@body('GetIncidentEntities')?['sessionId']",
-                                    "SkillName":  "GetReputationsByIpAddresses"
+                                    "PromptContent":  "/GetReputationsByIpAddresses What are the reputation score for the IPv4 addresses on that incident?",
+                                    "SessionId":  "@body('GetIncidentEntities')?['sessionId']"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -188,19 +208,19 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/directSkill"
+                                "path":  "/process-prompt"
                             }
                         },
                         "GetSentinelIncident":  {
                             "runAfter":  {
-                                "Parse_JSON-Incident":  [
+                                "Parse_JSON":  [
                                     "Succeeded"
                                 ]
                             },
                             "type":  "ApiConnection",
                             "inputs":  {
                                 "body":  {
-                                    "PromptContent":  "/GetSentinelIncident Summarize Sentinel Incident @{body('Parse_JSON-Incident')?['object']?['properties']?['incidentNumber']}"
+                                    "PromptContent":  "/GetSentinelIncident Summarize Sentinel Incident @{body('Parse_JSON')?['object']?['properties']?['object']?['properties']?['properties']?['properties']?['incidentNumber']}"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -208,61 +228,12 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/prompt"
+                                "path":  "/process-prompt"
                             }
                         },
-                        "Initialize_variable":  {
+                        "Parse_JSON":  {
                             "runAfter":  {
-                                "Json_explain_classify":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "InitializeVariable",
-                            "inputs":  {
-                                "variables":  [
-                                    {
-                                        "name":  "classified explain",
-                                        "type":  "string",
-                                        "value":  "@body('Json_explain_classify')?['Evaluation Result Content']"
-                                    }
-                                ]
-                            }
-                        },
-                        "Json_explain_classify":  {
-                            "runAfter":  {
-                                "explain_classify":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "ParseJson",
-                            "inputs":  {
-                                "content":  "@body('explain_classify')",
-                                "schema":  {
-                                    "properties":  {
-                                        "Evaluation Result Content":  {
-                                            "type":  "string"
-                                        },
-                                        "Evaluation Result Type":  {
-                                            "type":  "string"
-                                        },
-                                        "Next Prompt Suggestions":  {
-                                        },
-                                        "Prompt Content":  {
-                                            "type":  "string"
-                                        },
-                                        "SessionId":  {
-                                            "type":  "string"
-                                        },
-                                        "Skill Name":  {
-                                        }
-                                    },
-                                    "type":  "object"
-                                }
-                            }
-                        },
-                        "Parse_JSON-Incident":  {
-                            "runAfter":  {
-                                "Update_incident_Status":  [
+                                "Update_incident":  [
                                     "Succeeded"
                                 ]
                             },
@@ -1554,13 +1525,13 @@
                         },
                         "Parse_JSON_2":  {
                             "runAfter":  {
-                                "adding_tags_for_the_incident":  [
+                                "classify_incident":  [
                                     "Succeeded"
                                 ]
                             },
                             "type":  "ParseJson",
                             "inputs":  {
-                                "content":  "@body('Report')",
+                                "content":  "@body('classify_incident')",
                                 "schema":  {
                                     "properties":  {
                                         "Evaluation Result Content":  {
@@ -1586,13 +1557,13 @@
                         },
                         "Parse_JSON_3":  {
                             "runAfter":  {
-                                "classify_incident_":  [
+                                "Explain_classify":  [
                                     "Succeeded"
                                 ]
                             },
                             "type":  "ParseJson",
                             "inputs":  {
-                                "content":  "@body('classify_incident_')",
+                                "content":  "@body('Explain_classify')",
                                 "schema":  {
                                     "properties":  {
                                         "Evaluation Result Content":  {
@@ -1648,6 +1619,38 @@
                                 }
                             }
                         },
+                        "Parse_JSON_5":  {
+                            "runAfter":  {
+                                "adding_tags_for_the_incident":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ParseJson",
+                            "inputs":  {
+                                "content":  "@body('Tags_collection')",
+                                "schema":  {
+                                    "properties":  {
+                                        "Evaluation Result Content":  {
+                                            "type":  "string"
+                                        },
+                                        "Evaluation Result Type":  {
+                                            "type":  "string"
+                                        },
+                                        "Next Prompt Suggestions":  {
+                                        },
+                                        "Prompt Content":  {
+                                            "type":  "string"
+                                        },
+                                        "SessionId":  {
+                                            "type":  "string"
+                                        },
+                                        "Skill Name":  {
+                                        }
+                                    },
+                                    "type":  "object"
+                                }
+                            }
+                        },
                         "Report":  {
                             "runAfter":  {
                                 "GetIntuneDevices2":  [
@@ -1666,12 +1669,12 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/prompt"
+                                "path":  "/process-prompt"
                             }
                         },
                         "Report_answer":  {
                             "runAfter":  {
-                                "Parse_JSON_2":  [
+                                "Parse_JSON_5":  [
                                     "Succeeded"
                                 ]
                             },
@@ -1681,7 +1684,7 @@
                                     {
                                         "name":  "Answer",
                                         "type":  "array",
-                                        "value":  "@array(body('Parse_JSON_2')?['Evaluation Result Content'])"
+                                        "value":  "@array(body('Parse_JSON_5')?['Evaluation Result Content'])"
                                     }
                                 ]
                             }
@@ -1697,18 +1700,18 @@
                                 "from":  "@variables('Answer')",
                                 "select":  {
                                     "Copilot Report":  "@variables('Answer')",
-                                    "Explain Classify":  "@variables('classified explain')"
+                                    "Explain Classify":  "@variables('Answer')"
                                 }
                             }
                         },
                         "Switch":  {
                             "runAfter":  {
-                                "Parse_JSON_3":  [
+                                "Parse_JSON_2":  [
                                     "Succeeded"
                                 ]
                             },
                             "cases":  {
-                                "Case":  {
+                                "Case-High":  {
                                     "case":  "high",
                                     "actions":  {
                                         "Update_incident_2":  {
@@ -1732,10 +1735,10 @@
                                         }
                                     }
                                 },
-                                "Case_2":  {
+                                "Case-Medium":  {
                                     "case":  "medium",
                                     "actions":  {
-                                        "Update_incident":  {
+                                        "Update_incident_3":  {
                                             "runAfter":  {
                                             },
                                             "type":  "ApiConnection",
@@ -1756,10 +1759,10 @@
                                         }
                                     }
                                 },
-                                "Case_3":  {
+                                "Case_-Low":  {
                                     "case":  "low",
                                     "actions":  {
-                                        "Update_incident_3":  {
+                                        "Update_incident_4":  {
                                             "runAfter":  {
                                             },
                                             "type":  "ApiConnection",
@@ -1779,60 +1782,18 @@
                                             }
                                         }
                                     }
-                                },
-                                "Case_4":  {
-                                    "case":  "informational",
-                                    "actions":  {
-                                        "Update_incident_4":  {
-                                            "runAfter":  {
-                                            },
-                                            "type":  "ApiConnection",
-                                            "inputs":  {
-                                                "body":  {
-                                                    "incidentArmId":  "@triggerBody()?['object']?['id']",
-                                                    "severity":  "Informational",
-                                                    "status":  "Active"
-                                                },
-                                                "host":  {
-                                                    "connection":  {
-                                                        "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
-                                                    }
-                                                },
-                                                "method":  "put",
-                                                "path":  "/Incidents"
-                                            }
-                                        }
-                                    }
                                 }
                             },
                             "default":  {
                                 "actions":  {
-                                    "Update_incident_6":  {
-                                        "runAfter":  {
-                                        },
-                                        "type":  "ApiConnection",
-                                        "inputs":  {
-                                            "body":  {
-                                                "incidentArmId":  "@body('Update_incident_Status')?['id']",
-                                                "status":  "Active"
-                                            },
-                                            "host":  {
-                                                "connection":  {
-                                                    "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
-                                                }
-                                            },
-                                            "method":  "put",
-                                            "path":  "/Incidents"
-                                        }
-                                    }
                                 }
                             },
-                            "expression":  "@toLower(body('Parse_JSON_3')?['Evaluation Result Content'])",
+                            "expression":  "@toLower(body('Parse_JSON_2')?['Evaluation Result Content'])",
                             "type":  "Switch"
                         },
                         "Tags_collection":  {
                             "runAfter":  {
-                                "Initialize_variable":  [
+                                "classified_explain":  [
                                     "Succeeded"
                                 ]
                             },
@@ -1840,7 +1801,7 @@
                             "inputs":  {
                                 "body":  {
                                     "PromptContent":  "Derive a set of tags (5 tags) to describe this incident. the Tags will be used to group other incidents, include a tag for \"Security Copilot Triaged\", only respond with the category, write it as single line with comma between Tags to tags, and dont add bullet points.",
-                                    "SessionId":  "@body('explain_classify')?['sessionId']"
+                                    "SessionId":  "@body('Explain_classify')?['sessionId']"
                                 },
                                 "host":  {
                                     "connection":  {
@@ -1848,10 +1809,10 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/prompt"
+                                "path":  "/process-prompt"
                             }
                         },
-                        "Update_incident_Status":  {
+                        "Update_incident":  {
                             "runAfter":  {
                             },
                             "type":  "ApiConnection",
@@ -1925,7 +1886,24 @@
                                 ]
                             }
                         },
-                        "classify_incident_":  {
+                        "classified_explain":  {
+                            "runAfter":  {
+                                "Parse_JSON_3":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "InitializeVariable",
+                            "inputs":  {
+                                "variables":  [
+                                    {
+                                        "name":  "classified explain",
+                                        "type":  "string",
+                                        "value":  "@body('Parse_JSON_3')?['Evaluation Result Content']"
+                                    }
+                                ]
+                            }
+                        },
+                        "classify_incident":  {
                             "runAfter":  {
                                 "Report":  [
                                     "Succeeded"
@@ -1943,28 +1921,7 @@
                                     }
                                 },
                                 "method":  "post",
-                                "path":  "/evaluations/prompt"
-                            }
-                        },
-                        "explain_classify":  {
-                            "runAfter":  {
-                                "Switch":  [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type":  "ApiConnection",
-                            "inputs":  {
-                                "body":  {
-                                    "PromptContent":  "/SummarizeText Explain why you selected this classifiction. Format as bullet points?",
-                                    "SessionId":  "@body('classify_incident_')?['sessionId']"
-                                },
-                                "host":  {
-                                    "connection":  {
-                                        "name":  "@parameters('$connections')['securitycopilot']['connectionId']"
-                                    }
-                                },
-                                "method":  "post",
-                                "path":  "/evaluations/prompt"
+                                "path":  "/process-prompt"
                             }
                         }
                     },
@@ -1993,11 +1950,8 @@
             "location":  "[resourceGroup().location]",
             "tags":  {
                 "Created By":  "Yaniv Shasha",
-                "CreatedDate":  "11/9/2023 10:48:50 PM",
+                "CreatedDate":  "11/21/2023 8:37:47 PM",
                 "CreatorUPN":  "yanivsh@woodgrove.ms"
-            },
-            "identity":  {
-                "type":  "SystemAssigned"
             },
             "apiVersion":  "2017-07-01",
             "dependsOn":  [
