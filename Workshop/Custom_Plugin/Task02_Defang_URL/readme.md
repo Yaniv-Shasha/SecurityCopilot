@@ -25,13 +25,17 @@ To successfully complete this task, you must meet the following prerequisites:<b
 ### Upload the Custom Plugin 
 
 
-1. Upload the custom plugin and check if its turn on
+1. Obtain the file named "DefangsURLs.yaml" from this directory.<br>
+2. Inspect it to appreciate the simplicity of creating a GPT-type plugin.<br>
+3. Upload the custom plugin and verify if it's activated.<br>
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/cfcd1baf606277478b7512be8bf3e43c7074f870/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/upload_plugin.jpg"/>
 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/cfcd1baf606277478b7512be8bf3e43c7074f870/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/check_if_plugin_isON.jpg
-"/>
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/f15ba2df94fbba97cb9adf70426cdf4d471b28fb/Workshop/Custom_Plugin/Task02_Defang_URL/images/plugin-turnON.jpg"/>
+
+
+####  Use case
 
 4. Execute the following prompts:
 
