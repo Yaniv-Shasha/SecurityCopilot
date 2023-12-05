@@ -1,6 +1,6 @@
 # Introduction 
 
-#### Objectives
+### Objectives
 
 Upon completing this technical guide, you will gain the following abilities:<br>
 
@@ -10,7 +10,7 @@ Upon completing this technical guide, you will gain the following abilities:<br>
 
 
 
-#### Scenario
+### Scenario
 In this technical workshop, participants will learn how to upload a Security Copilot custom plugin of the GPT type.<br> 
 To successfully complete this task, you must meet the following prerequisites:<br>
 
@@ -19,10 +19,10 @@ To successfully complete this task, you must meet the following prerequisites:<b
 
 
 
-####  Instruction
+###  Instruction
     
 
-### Upload the Custom Plugin 
+#### Upload the Custom Plugin 
 
 
 1. Obtain the file named "DefangsURLs.yaml" from this directory.<br>
