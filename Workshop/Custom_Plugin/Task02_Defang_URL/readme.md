@@ -52,9 +52,9 @@ Your task is:<br>
 
 ####  How to accomplish this
 
-1. utilize the "fetchurl" skill to retrieve the file situated in the same folder. Please note that you will need to obtain the raw representation of the file.<br> 
+1. Use the "fetchurl" skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file..<br> 
 
-Example prompt:
+####   Example prompt:
 
 1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task02_Defang_URL/UrlstoFetch_Task02.json.<br> 
 
