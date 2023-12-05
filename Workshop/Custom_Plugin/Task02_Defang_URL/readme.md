@@ -52,7 +52,18 @@ Your task is:<br>
 
 ####  How to accomplish this
 
-1. tilize the "fetchurl" skill to retrieve the file situated in the same folder. Please note that you will need to obtain the raw representation of the file.<br> 
+1. utilize the "fetchurl" skill to retrieve the file situated in the same folder. Please note that you will need to obtain the raw representation of the file.<br> 
 
 Example prompt:
+
+1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task02_Defang_URL/UrlstoFetch_Task02.json.<br> 
+
+2. From this file distinct all the DnsQuery.<br> 
+
+3. check reputation score for the above domain.<br> 
+
+3. Defang the above doamin.<br> 
+
+
+
 
