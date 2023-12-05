@@ -58,7 +58,7 @@ Your SOC manager has requested that you include both the IP address and its comp
 
 1. Use the "fetchurl" skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file.<br> 
 
-####   Example prompt:
+####   Example prompts:
 
 1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task03_GEO_IP_report/CiscoSEG.csv.<br> 
 
