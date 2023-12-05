@@ -33,6 +33,10 @@ select the subscription, resource group and logicapp name.
 <br>
 	2. Once the Logic App is created, locate it and authenticate the "send email" action with a user who has a mailbox in O365.
 
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/32db9c9a0a69d4bafeefb0e92aea4b540572adaa/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/auth_logicapp.jpg"/>
+
+    
+
 ### Upload the Custom Plugin 
 
 Open the "SendJokeByEmail.yml" file in the same folder and edit it.
@@ -40,11 +44,11 @@ Add the following information:
 
 1. The SubscriptionId where you deployed your Logic App.
 2. The ResourceGroup where you deployed the Logic App.
+2. If you changed the default logic app name adapt the logic app name.
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/2100cbf8cdd70735495ad5c869746bf02be144dc/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/yaml_subid.jpg"/>
 
 3. Upload the custom plugin and check if its turn on
-
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/cfcd1baf606277478b7512be8bf3e43c7074f870/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/upload_plugin.jpg"/>
 
