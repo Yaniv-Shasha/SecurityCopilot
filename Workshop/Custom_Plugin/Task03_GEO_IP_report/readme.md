@@ -45,14 +45,14 @@ Your colleague has provided you with a CSV file containing DNS lookup activity f
 
 1. input this information into Copilot Pilot.
 2. Extract only the URLs from this file.
-3. Use the MDTI reputation score Skill to assess these URLs.
+3. Employ the MDTI reputation score to assess these URLs.
 4. Identify URLs with scores exceeding 75.
-5. In order to compile a report with your findings, utilize the custom plugin you recently uploaded to neutralize **(Defang)** the suspicious URLs.
+5. In order to compile a report with your findings, utilize the custom plugin you recently uploaded to neutralize(Defang) the suspicious URLs.
 
 
 ####  How to accomplish this
 
-* Use the "fetchurl" skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file..<br> 
+1. Use the "fetchurl" skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file..<br> 
 
 ####   Example prompt:
 
@@ -60,7 +60,7 @@ Your colleague has provided you with a CSV file containing DNS lookup activity f
 
 2. From this file distinct all the DnsQuery.<br> 
 
-3. Check reputation score for the above domain.<br> 
+3. check reputation score for the above domain.<br> 
 
 3. Defang the above doamin.<br> 
 
