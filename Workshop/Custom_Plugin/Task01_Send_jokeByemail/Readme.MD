@@ -61,6 +61,8 @@ Add the following information:
 "Tell me a security-related joke for today."
 Run the logic to send the above joke to this email: youremail@email.com.
 
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5314df248009d620c560f0b4b0b8b1bb8444848b/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/prompts.jpg"/>
+
 5. To monitor the process, open the Logic App you just created and check the last runs.
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/86e2ba5cab9da11622dfa5966aa86c1223b615d0/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/run_history.jpg"/>
