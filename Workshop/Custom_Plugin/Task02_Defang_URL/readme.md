@@ -41,7 +41,7 @@ You are an incident response analyst currently investigating a prolonged inciden
 Your colleague has provided you with a CSV file containing DNS lookup activity from the DNS server<br>
 
 
-Your task is:<br>
+**Your task is:**<br>
 
 1. input this information into Copilot Pilot.
 2. Extract only the URLs from this file.
