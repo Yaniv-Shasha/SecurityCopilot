@@ -3,6 +3,7 @@
 #### Objectives
 
 Upon completing this technical guide, you will gain the following abilities:<br>
+
 · Upload a Security Copilot custom plugin of the Logic App type.<br>
 · Deploy an Azure Logic App capable of handling Security Copilot prompts.<br>
 · Create a Security Copilot session that triggers this Logic App.<br>
@@ -15,13 +16,13 @@ In this technical workshop, participants will learn how to upload a Security Cop
 · You should have permission to deploy a Logic App.<br>
 
 
-####  instruction
+####  Instruction
 
 ## Deploy Logic app 
 
 	1. Deploy the Logic App above by clicking the "Deploy to Azure" button
 
-select the subscription, resource group and logicapp name.
+Select the subscription, resource group and logicapp name.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FWorkshop%2FCustom_Plugin%2FTask01_Send_jokeByemail%2FWorkshop01-sendJokeByemail%2Fazuredeploy.json" target="_blank">
     <img src="https://aka.ms/deploytoazurebutton"/>
