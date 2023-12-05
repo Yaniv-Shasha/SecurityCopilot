@@ -38,7 +38,14 @@ Add the following information:
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/2100cbf8cdd70735495ad5c869746bf02be144dc/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/yaml_subid.jpg"/>
 
-3. Upload the custom plugin.
+3. Upload the custom plugin and check if its turn on
+
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/cfcd1baf606277478b7512be8bf3e43c7074f870/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/upload_plugin.jpg"/>
+
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/cfcd1baf606277478b7512be8bf3e43c7074f870/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/check_if_plugin_isON.jpg
+"/>
 
 4. Execute the following prompts:
 
