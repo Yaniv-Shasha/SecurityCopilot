@@ -24,6 +24,8 @@ In this technical workshop, participants will learn how to upload a Security Cop
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FWorkshop%2FCustom_Plugin%2FTask01_Send_jokeByemail%2FWorkshop01-sendJokeByemail%2Fazuredeploy.json" target="_blank">
     <img src="https://aka.ms/deploytoazurebutton"/>
 </a>
+
+<br>
 	2. Once the Logic App is created, locate it and authenticate the "send email" action with a user who has a mailbox in O365.
 
 ### Upload the Custom Plugin 
