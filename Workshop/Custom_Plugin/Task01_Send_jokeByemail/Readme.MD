@@ -40,7 +40,7 @@ Select the subscription, resource group and logicapp name.
 
 ### Upload the Custom Plugin 
 
-Open the "SendJokeByEmail.yml" file in the same folder and edit it.
+downalod a local copy of "SendJokeByEmail.yml" file located in the same folder and edit it.<br>
 Add the following information:
 
 1. The SubscriptionId where you deployed your Logic App.
