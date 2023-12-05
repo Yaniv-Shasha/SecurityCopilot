@@ -60,13 +60,13 @@ Your SOC manager has requested that you include both the IP address and its comp
 
 ####   Example prompt:
 
-1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task02_Defang_URL/UrlstoFetch_Task02.json.<br> 
+1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task03_GEO_IP_report/CiscoSEG.csv.<br> 
 
-2. From this file distinct all the DnsQuery.<br> 
+2. From this file distinct all the DeviceAddress.<br> 
 
-3. check reputation score for the above domain.<br> 
+3. Check reputation score for the above Ip's.<br> 
 
-3. Defang the above doamin.<br> 
+4. Tell me the Geolocation for the IP that its reputation is above 75.<br> 
 
 
 
