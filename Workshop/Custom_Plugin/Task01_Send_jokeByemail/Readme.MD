@@ -20,6 +20,9 @@ Have Permission to deploy logic app
 	1. Deploy the above logic app, by pressing on the deploy button
 	2. Located the newly created logic app and authenticate the send email action with user that has mailbox in O365
 
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FWorkshop%2FCustom_Plugin%2FTask01_Send_jokeByemail%2FWorkshop01-sendJokeByemail%2Fazuredeploy.json" target="_blank">
+    <img src="https://aka.ms/deploytoazurebutton"/>
+</a>
 
 ### upload the custom plugin 
 
@@ -28,6 +31,11 @@ Have Permission to deploy logic app
 
 The SubscriptionId where you deployed your logic app 
 The ResourceGroup where you deployed the logicapp 
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/2100cbf8cdd70735495ad5c869746bf02be144dc/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/yaml_subid.jpg"/>
+
+
+
 
 
 	3. Upload the custom plugin 
