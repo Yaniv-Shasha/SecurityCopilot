@@ -37,18 +37,22 @@ To successfully complete this task, you must meet the following prerequisites:<b
 
 ####  Use case
 
-4. Execute the following prompts:
-
-"Tell me a security-related joke for today."
-Run the logic to send the above joke to this email: youremail@email.com.
-
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5314df248009d620c560f0b4b0b8b1bb8444848b/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/prompts.jpg"/>
-
-5. To monitor the process, open the Logic App you just created and check the last runs.
-
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/86e2ba5cab9da11622dfa5966aa86c1223b615d0/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/run_history.jpg"/>
-
-	6. Open your inbox and examine the email.
+You are an incident response analyst currently investigating a prolonged incident.<br> 
+Your colleague has provided you with a CSV file containing DNS lookup activity from the DNS server<br>
 
 
-    We are hoping it was funny :-)
+Your task is:<br>
+
+1. input this information into Copilot Pilot.
+2. Extract only the URLs from this file.
+3. Employ the MDTI reputation score to assess these URLs.
+4. Identify URLs with scores exceeding 75.
+5. In order to compile a report with your findings, utilize the custom plugin you recently uploaded to neutralize(Defang) the suspicious URLs.
+
+
+####  How to accomplish this
+
+1. tilize the "fetchurl" skill to retrieve the file situated in the same folder. Please note that you will need to obtain the raw representation of the file.<br> 
+
+Example prompt:
+
