@@ -17,7 +17,7 @@ SkillGroups:
             Description: security joke content
             Required: true
         Settings:
-          SubscriptionId: 
-          ResourceGroup: 
-          WorkflowName: 
+          SubscriptionId: xxxxx-xxxx-xxxx
+          ResourceGroup: myRg
+          WorkflowName: SecCopilot-sendJokeByemail
           TriggerName: manual
