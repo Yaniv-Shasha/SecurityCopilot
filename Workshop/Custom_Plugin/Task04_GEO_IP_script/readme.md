@@ -60,7 +60,7 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 ####   Example prompts:
 
-1. Decode the above script "<Your Script here>".<br> 
+1. Decode the above script "Replace this with the script you copied".<br> 
 
 2. check reputation score for the above ip.<br> 
 
@@ -70,5 +70,5 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 
 #### Final results:
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/plugin_turn_on.jpg"/>
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/b6515cc05c037db8e9118bcb1dcbe5c458d2fbd7/Workshop/Custom_Plugin/Task04_GEO_IP_script/images/final_free%20text.png"/>
 
