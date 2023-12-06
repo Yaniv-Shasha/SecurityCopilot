@@ -56,7 +56,7 @@ Add the following information:
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/cfcd1baf606277478b7512be8bf3e43c7074f870/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/check_if_plugin_isON.jpg"/>
 
-4. Execute the following prompts:
+4. **Execute the following prompts:**
 
 * Tell me a security-related joke for today.<br>
 * Run the logic to send the above joke to this email: <youremailaddress@email.com>..<br>
