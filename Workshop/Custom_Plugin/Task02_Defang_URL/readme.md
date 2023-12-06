@@ -72,7 +72,7 @@ Your colleague has provided you with a CSV file containing DNS lookup activity f
 ####   Final Results:
 
 
-
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/c0c6fd81323f96011f6287d91899ebe0f1eb0903/Workshop/Custom_Plugin/Task02_Defang_URL/images/final_result.jpg"/>
 
 
 
