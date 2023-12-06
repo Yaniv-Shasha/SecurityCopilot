@@ -4,9 +4,8 @@
 
 Upon completing this technical guide, you will gain the following abilities:<br>
 
-* Upload a cusotm plug from API type.<br>
-* Learn how to use script analysis promptbook.<br>
-* Learn how to analze and encode Script.<br>
+* Upload a cusotm plug from KQL type.<br>
+* Learn how to enrich user information form external user list <br>
 * Generete report that will levrage the custom plugin source.<br>
 
 ### Scenario
@@ -24,9 +23,10 @@ To successfully complete this task, you must meet the following prerequisites:<b
 #### Upload the Custom Plugin 
 
 
-1. Obtain the file named "Geo.yaml" from this directory.<br>
-2. Inspect it to appreciate the simplicity of creating a API-type plugin.<br>
-3. Upload the custom plugin and verify if it's activated.<br>
+1. Obtain the file named "UsersHR.yml" from this directory.<br>
+2. Inspect a KQL-type plugin.<br>
+3. Modify the YAML file config to incluse your subscription, resource group and log analytics workspace.<br>
+4. Upload the custom plugin and verify if it's activated.<br>
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/upload_plugin.jpg"/>
 
