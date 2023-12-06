@@ -4,9 +4,9 @@
 
 Upon completing this technical guide, you will gain the following abilities:<br>
 
-· Upload a cusotm plug from GPT type.<br>
-· Learn how to use the fetchUrl skill.<br>
-· Generete report that will levrage the custom plugin source.<br>
+* Upload a cusotm plug from GPT type.<br>
+* Learn how to use the fetchUrl skill.<br>
+* Generete report that will levrage the custom plugin source.<br>
 
 
 
