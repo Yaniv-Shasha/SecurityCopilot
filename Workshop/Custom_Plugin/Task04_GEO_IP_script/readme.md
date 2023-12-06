@@ -52,7 +52,10 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 **Bouns task:**<br>
 
-1. Copy the script from script_decode.txt
+1. Copy the script from script_decode.txt .<br> 
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/c0aca523fb19d99c430f0c1401b431f6b54439d9/Workshop/Custom_Plugin/Task04_GEO_IP_script/images/decode.png"/>
+
 2. Open the Suspicious Script analysis
 3. past the Script you copief in setp one into the prompts and press run 
 4. share the report and notice if this script was malicious
