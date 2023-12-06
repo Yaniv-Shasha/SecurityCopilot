@@ -6,7 +6,8 @@ Upon completing this technical guide, you will gain the following abilities:<br>
 
 * Upload a cusotm plug from GPT type.<br>
 * Learn how to use the fetchUrl skill.<br>
-* Generete report that will levrage the custom plugin source.<br>
+* Learn how to use the DefangUrl skill.<br>
+* Generete report that will levrage MDTIO data and the custom plugin source.<br>
 
 
 
@@ -14,8 +15,8 @@ Upon completing this technical guide, you will gain the following abilities:<br>
 In this technical workshop, participants will learn how to upload a Security Copilot custom plugin of the GPT type.<br> 
 To successfully complete this task, you must meet the following prerequisites:<br>
 
-· You need your own tenant and Security Copilot instance.<br>
-· You should have permission to upload a custom plugin.<br>
+* You need your own tenant and Security Copilot instance.<br>
+* You should have permission to upload a custom plugin.<br>
 
 
 
@@ -52,17 +53,27 @@ Your colleague has provided you with a CSV file containing DNS lookup activity f
 
 ####  How to accomplish this
 
-* Use the "fetchurl" skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file..<br> 
+* Use the "fetchurl" skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file.<br> 
+* Use the MDTI skill and the DefangUrl to create report.
+
 
 ####   Example prompt:
 
 1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task02_Defang_URL/UrlstoFetch_Task02.json.<br> 
 
-2. From this file distinct all the DnsQuery.<br> 
+2. Distinct all the DNS query from this file.<br> 
 
-3. Check reputation score for the above domain.<br> 
+3. Check reputation score for the above domains.<br> 
 
-3. Defang the above doamin.<br> 
+4. Defang URL for all the domains with reputation score higher than 75
+
+5. Create report that include only the defanged url and the reputation score.<br> 
+
+####   Final Results:
+
+
+
+
 
 
 
