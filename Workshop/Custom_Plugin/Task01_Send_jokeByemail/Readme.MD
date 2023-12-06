@@ -58,8 +58,8 @@ Add the following information:
 
 4. Execute the following prompts:
 
-"Tell me a security-related joke for today."
-Run the logic to send the above joke to this email: youremail@email.com.
+"Tell me a security-related joke for today.".<br>
+Run the logic to send the above joke to this email: <youremailaddress@email.com>..<br>
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5314df248009d620c560f0b4b0b8b1bb8444848b/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/prompts.jpg"/>
 
