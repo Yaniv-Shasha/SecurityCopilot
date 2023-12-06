@@ -67,7 +67,7 @@ Add the following information:
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/86e2ba5cab9da11622dfa5966aa86c1223b615d0/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/run_history.jpg"/>
 
-	6. Open your inbox and examine the email.
+	6. Open your inbox and examine the email.<br>
 
+###  See you in the Next Task!
 
-    We are hoping it was funny :-)
