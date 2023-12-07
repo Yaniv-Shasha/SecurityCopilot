@@ -21,8 +21,8 @@ In this technical workshop, participants will learn how to upload a Security Cop
 
 To successfully complete this task, you must meet the following prerequisites:<br>
 
-· You need your own tenant and Security Copilot instance.<br>
-· You should have permission to upload a custom plugin.<br>
+* You need your own tenant and Security Copilot instance.<br>
+* You should have permission to upload a custom plugin.<br>
 
 
 
