@@ -22,3 +22,9 @@ By utilizing custom plugins, users can harness the expansive knowledge of Securi
 
 [**Module 2 – DefangUrl - GPT plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task02_Defang_URL/readme.md)
 
+[**Module 3 – GeoIP01 - API plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task03_GEO_IP_report/readme.md)
+
+[**Module 4 – GeoIp02 - GPT plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task04_GEO_IP_script/readme.md)
+
+[**Module 4 – GeoIp02 - KQL plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task05_KQL/readme.md)
+
