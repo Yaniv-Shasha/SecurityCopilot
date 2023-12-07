@@ -53,20 +53,22 @@ As this incident created in an air-gap environment, the analyst from Woodgrove-a
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/1a379fee910284aa03dfb5a3f21a17f0bbd97094/Workshop/Custom_Plugin/Task05_KQL/images/add_paramter.jpg"/>
 
-5. Generate report that includes the incident summary and the user enriched data from the WoodgroveHR.
+4. Generate report that includes the incident summary and the user enriched data from the WoodgroveHR.
 
 
 ####   Example prompts:
 
-1. Decode the above script "Replace this with the script you copied".<br> 
+1. Fetch url https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task05_KQL/Sentinel_Incident.json.<br> 
 
-2. check reputation score for the above ip.<br> 
+2. Call the explictly the cusotm skill you update by by typing **/woodgroveHD**.<br> 
 
-3. Use Geo location for the above IP.<br> 
+3. Ddd the user name as input paramter for the **/woodgroveHD** plugin.<br> 
 
-4. create report that include the reputation score and the Geo Ip address.<br> 
+4. Generate report that summarize the incident and include the user information.
+
+.<br> 
 
 
 #### Final results:
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/b6515cc05c037db8e9118bcb1dcbe5c458d2fbd7/Workshop/Custom_Plugin/Task04_GEO_IP_script/images/final_free%20text.png"/>
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/624416689c40b5d2bcc357bc4e40af7f612cadd0/Workshop/Custom_Plugin/Task05_KQL/images/final_results.jpg"/>
 
