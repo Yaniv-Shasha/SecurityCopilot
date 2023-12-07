@@ -41,15 +41,16 @@ To successfully complete this task, you must meet the following prerequisites:<b
 
 ####  Use case
 
-You are Soc Analyst in Woodgrove Domain, During an a SAP Incident investigation, you found a suspicious user that download file from SAP system, to act fast, you need to enrich the user quickly with information that located in your HR system name **WoodgroveHR**.<br> 
-As this incident created in an air-gap environment, the analyst from Woodgrove-airgap shared the incident in a Json format that you need to retrieve..<br> 
 
+As a SOC Analyst at Woodgrove Domain, you are involved in investigating an SAP incident. During this investigation, you identified a user engaging in suspicious activity, specifically downloading a file from the SAP system. To respond swiftly, it's crucial to rapidly enrich this user's profile with data from your HR system, known as **WoodgroveHR**.<br> 
+
+Given that this incident occurred in an air-gapped environment, your colleague from Woodgrove-airgap has provided the incident details in a Json format, which you need to access and utilize for further analysis.<br> 
 
 
 **Your task is:**<br>
 
 1. Fetch air-gapped sentinel incident into Copilot Session memory. 
-2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly. 
+2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly. <br> 
   Hint: YOU CAN DO IT BY TYPE **/wood** <br> 
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5d4c5f29d1b3cca6239fb227690ab9dce3272cc7/Workshop/Custom_Plugin/Task05_KQL/images/call_plugin.jpg"/>
@@ -58,7 +59,7 @@ As this incident created in an air-gap environment, the analyst from Woodgrove-a
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/1a379fee910284aa03dfb5a3f21a17f0bbd97094/Workshop/Custom_Plugin/Task05_KQL/images/add_paramter.jpg"/>
 
-4. Generate report that includes the incident summary and the user enriched data from the WoodgroveHR.
+4. Generate report that includes the incident summary and the user enriched data from the WoodgroveHR.<br> 
 
 
 ####   Example prompts:
@@ -71,7 +72,7 @@ As this incident created in an air-gap environment, the analyst from Woodgrove-a
 
 4. Generate report that summarize the incident and include the user information.
 
-.<br> 
+<br> 
 
 
 #### Final results:
