@@ -84,7 +84,7 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 <img src="./images/decode.png"/>
 
-2. Open the Suspicious Script analysis
-3. past the Script you copief in setp one into the prompts and press run 
-4. share the report and notice if this script was malicious
+2. Launch the 'Suspicious Script Analysis' tool Promptbooks.
+3. Paste the script you copied in Step One into the designated field and click 'Run'. 
+4. Distribute the generated report and assess whether the script is malicious
 
