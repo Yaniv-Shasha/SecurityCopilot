@@ -80,9 +80,18 @@ To use the FetchURL option, the Public **Web plugin** must be enabled
 
 1. Fetch url https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task05_KQL/Sentinel_Incident.json.<br> 
 
-2. Call the explictly the cusotm skill you update by by typing **/woodgroveHD**.<br> 
 
-3. Ddd the user name as input paramter for the **/woodgroveHD** plugin.<br> 
+
+2. You need to call  explictly the custom skill you uploaded,  by typing **/woodgroveHD**.<br> 
+
+> ⭐ Notice: <br>
+  Hint: you can do it by typing  **/wood** <br> 
+
+<img src="./images/call_plugin.jpg"/>
+
+3. Add the user name as input paramter for the **/woodgroveHD** plugin.<br> 
+
+<img src="./images/add_paramter.jpg"/>
 
 4. Generate report that summarize the incident and include the user information.
 
