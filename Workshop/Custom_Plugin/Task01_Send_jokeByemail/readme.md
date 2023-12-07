@@ -1,5 +1,8 @@
 # Introduction
 
+#### ⌛ Estimated time to complete this lab: 10 minutes
+#### 🎓 Level: 100 (Beginner)
+
 #### Objectives
 
 Upon completing this technical guide, you will gain the following abilities:<br>
