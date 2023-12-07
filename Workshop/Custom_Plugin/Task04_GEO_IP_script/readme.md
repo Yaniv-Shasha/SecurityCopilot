@@ -78,8 +78,7 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 
 
- ⭐
- #### Bouns task: <br>
+ ⭐**Bouns task:** <br>
 
 1. Copy the script from script_decode.txt .<br> 
 
