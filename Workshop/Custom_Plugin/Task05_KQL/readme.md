@@ -31,7 +31,7 @@ To successfully complete this task, you must meet the following prerequisites:<b
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/upload_plugin.jpg"/>
 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/plugin_turn_on.jpg"/>
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8f8d876b47d68b620e7815ab584bdf382457073d/Workshop/Custom_Plugin/Task05_KQL/images/upload_plugin_wood.jpg"/>
 
 
 ####  Use case
