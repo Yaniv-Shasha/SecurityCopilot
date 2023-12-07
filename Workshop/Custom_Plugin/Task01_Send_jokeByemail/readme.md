@@ -70,7 +70,7 @@ Add the following information:
 
 <img src="./Images/run_history.jpg"/>
 
-	6. Open your inbox and examine the email.<br>
+6. Open your inbox and examine the email.<br>
 
 ###  See you in the next Task!
 
