@@ -2,18 +2,18 @@
 
 ### Objectives
 
-Upon completing this technical guide, you will gain the following abilities:<br>
+After finishing this technical guide, you will acquire the following skills:<br>
 
-* Upload a cusotm plug from KQL type.<br>
-* Learn how to enrich user information form external user list <br>
-* Generete report that will levrage the custom plugin source.<br>
+* Ability to upload a custom plugin of the KQL type.<br>
+* Understanding of how to enhance user information using an external user list.<br>
+* Proficiency in generating reports utilizing the custom plugin source.<br>
 
 ### Scenario
 In this technical workshop, participants will learn how to upload a Security Copilot custom plugin of the API type.<br> 
 To successfully complete this task, you must meet the following prerequisites:<br>
 
-· You need your own tenant and Security Copilot instance.<br>
-· You should have permission to upload a custom plugin.<br>
+* You need your own tenant and Security Copilot instance.<br>
+* You should have permission to upload a custom plugin.<br>
 
 
 
@@ -23,10 +23,14 @@ To successfully complete this task, you must meet the following prerequisites:<b
 #### Upload the Custom Plugin 
 
 
-1. Obtain the file named "UsersHR.yml" from this directory.<br>
-2. Inspect a KQL-type plugin.<br>
-3. Modify the YAML file config to incluse your subscription, resource group and log analytics workspace.<br>
-4. Upload the custom plugin and verify if it's activated.<br>
+1. Retrieve the file titled **"UsersHR.yml"** from the specified directory..<br>
+2. Examine a plugin of the KQL type.<br>
+3. Alter the configuration in the YAML file to include your subscription, resource group, and log analytics workspace.<br>
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/0d8e25046b72a18262ca6dbf238a018f37e7d447/Workshop/Custom_Plugin/Task05_KQL/images/update_config.jpg"/>
+
+<br>
+4. Upload the custom plugin and confirm its activation.<br>
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/upload_plugin.jpg"/>
 
@@ -45,11 +49,11 @@ As this incident created in an air-gap environment, the analyst from Woodgrove-a
 
 1. Fetch air-gapped sentinel incident into Copilot Session memory. 
 2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly. 
-  hint: YOU CAN DO IT BY TYPE */wood* <br> 
+  Hint: YOU CAN DO IT BY TYPE */wood* <br> 
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5d4c5f29d1b3cca6239fb227690ab9dce3272cc7/Workshop/Custom_Plugin/Task05_KQL/images/call_plugin.jpg"/>
 
-3. search the victim user from the incident <br> 
+3. Search the victim user from the incident <br> 
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/1a379fee910284aa03dfb5a3f21a17f0bbd97094/Workshop/Custom_Plugin/Task05_KQL/images/add_paramter.jpg"/>
 
