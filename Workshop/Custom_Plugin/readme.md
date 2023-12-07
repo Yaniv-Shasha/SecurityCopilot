@@ -26,5 +26,5 @@ By utilizing custom plugins, users can harness the expansive knowledge of Securi
 
 [**Module 4 – GeoIp02 - GPT plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task04_GEO_IP_script/readme.md)
 
-[**Module 4 – GeoIp02 - KQL plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task05_KQL/readme.md)
+[**Module 5 – KQL - KQL plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task05_KQL/readme.md)
 
