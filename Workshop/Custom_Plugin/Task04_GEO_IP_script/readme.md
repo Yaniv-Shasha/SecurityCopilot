@@ -58,15 +58,6 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 5. In order to compile a report with your findings, utilize the custom plugin you recently uploaded to GeoIP the suspicious Ips.
 6. Share report that include the reputation score and the Geo IP data.
 
-**Bouns task:**<br>
-
-1. Copy the script from script_decode.txt .<br> 
-
-<img src="./images/decode.png"/>
-
-2. Open the Suspicious Script analysis
-3. past the Script you copief in setp one into the prompts and press run 
-4. share the report and notice if this script was malicious
 
 
 ####   Example prompts:
@@ -84,4 +75,17 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 
 <img src="./images/final_free%20text.png"/>
+
+
+
+ ⭐
+ #### Bouns task: <br>
+
+1. Copy the script from script_decode.txt .<br> 
+
+<img src="./images/decode.png"/>
+
+2. Open the Suspicious Script analysis
+3. past the Script you copief in setp one into the prompts and press run 
+4. share the report and notice if this script was malicious
 
