@@ -32,7 +32,7 @@ Select the subscription, resource group and logicapp name.
 </a>
 <br>
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/9859a2c50eec7150aec74fee8ab85c91611d099c/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Images/deploy_logic_app.jpg"/>
+<img src="./Images/deploy_logic_app.jpg"/>
 
 <br>
 	2. Once the Logic App is created, locate it and authenticate the "send email" action with a user who has a mailbox in O365.
