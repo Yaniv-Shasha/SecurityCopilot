@@ -71,6 +71,14 @@ Your SOC manager has requested that you include both the IP address and its comp
 
 4. Tell me the Geolocation for the IP that its reputation is above 75.<br> 
 
+5. Generate reports that include ip address reputation score and geo location information.<br> 
+
+
+####  ✅  Final Results:
+
+
+<img src="./images/final_results.jpg"/>
+
 
 
 
