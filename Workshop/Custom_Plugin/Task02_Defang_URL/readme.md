@@ -1,5 +1,8 @@
 # Introduction 
 
+#### 🎓 Level: 100 (Beginner)
+#### ⌛ Estimated time to complete this lab: 10 minutes
+
 ### Objectives
 
 Upon completing this technical guide, you will gain the following abilities:<br>
@@ -69,7 +72,7 @@ Your colleague has provided you with a CSV file containing DNS lookup activity f
 
 5. Create report that include only the defanged url and the reputation score.<br> 
 
-####   Final Results:
+####  ✅  Final Results:
 
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/c0c6fd81323f96011f6287d91899ebe0f1eb0903/Workshop/Custom_Plugin/Task02_Defang_URL/images/final_result.jpg"/>
