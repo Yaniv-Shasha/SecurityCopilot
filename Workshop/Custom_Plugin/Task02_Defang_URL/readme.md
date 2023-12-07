@@ -4,7 +4,7 @@
 
 Upon completing this technical guide, you will gain the following abilities:<br>
 
-* Upload a cusotm plug from GPT type.<br>
+* Upload a custom plug from GPT type.<br>
 * Learn how to use the fetchUrl skill.<br>
 * Learn how to use the DefangUrl skill.<br>
 * Generete report that will levrage MDTIO data and the custom plugin source.<br>
@@ -44,7 +44,7 @@ Your colleague has provided you with a CSV file containing DNS lookup activity f
 
 **Your task is:**<br>
 
-1. input this information into Copilot Pilot.
+1. Fetch DNS information into Copilot Pilot Context session.
 2. Extract only the URLs from this file.
 3. Use the MDTI reputation score Skill to assess these URLs.
 4. Identify URLs with scores exceeding 75.
