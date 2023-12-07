@@ -7,9 +7,9 @@
 
 Upon completing this technical guide, you will gain the following abilities:<br>
 
-· Upload a cusotm plug from API type.<br>
-· Learn how to use the fetchUrl skill.<br>
-· Generete report that will levrage the custom plugin source.<br>
+* Upload a cusotm plug from API type.<br>
+* Learn how to use the fetchUrl skill.<br>
+* Generete report that will levrage the custom plugin source.<br>
 
 
 
@@ -17,8 +17,8 @@ Upon completing this technical guide, you will gain the following abilities:<br>
 In this technical workshop, participants will learn how to upload a Security Copilot custom plugin of the API type.<br> 
 To successfully complete this task, you must meet the following prerequisites:<br>
 
-· You need your own tenant and Security Copilot instance.<br>
-· You should have permission to upload a custom plugin.<br>
+* You need your own tenant and Security Copilot instance.<br>
+* You should have permission to upload a custom plugin.<br>
 
 
 
