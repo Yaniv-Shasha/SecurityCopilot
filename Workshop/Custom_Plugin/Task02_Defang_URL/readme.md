@@ -48,6 +48,13 @@ Your colleague has provided you with a CSV file containing DNS lookup activity f
 **Your task is:**<br>
 
 1. Fetch DNS information into Copilot Pilot Context session.
+
+> ⭐ Notice: <br>
+
+To use the FetchURL option, the Public **Web plugin** must be enabled
+
+<img src="./images/public_web.jpg"/><br>
+
 2. Extract only the URLs from this file.
 3. Use the MDTI reputation score Skill to assess these URLs.
 4. Identify URLs with scores exceeding 75.

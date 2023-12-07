@@ -72,9 +72,9 @@ Your SOC manager has requested that you include both the IP address and its comp
 
 > ⭐ Notice: <br>
 
-to be able to use Fetchurl opetion the **Public web** plugin, need to be enable
+To use the FetchURL option, the Public **Web plugin** must be enabled
 
-<img src="./images/public_web.jpg"/>
+<img src="./images/public_web.jpg"/><br>
 
 <br> 
 
