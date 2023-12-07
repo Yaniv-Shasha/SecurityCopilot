@@ -46,7 +46,7 @@ As this incident created in an air-gap environment, the analyst from Woodgrove-a
 1. Fetch air-gapped sentinel incident into Copilot Session memory. 
 2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly.
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/c0aca523fb19d99c430f0c1401b431f6b54439d9/Workshop/Custom_Plugin/Task04_GEO_IP_script/images/decode.png"/>
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5d4c5f29d1b3cca6239fb227690ab9dce3272cc7/Workshop/Custom_Plugin/Task05_KQL/images/call_plugin.jpg"/>
 
 
 3. Employ the MDTI reputation score to assess these Ip.
