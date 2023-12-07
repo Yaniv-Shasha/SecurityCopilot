@@ -42,7 +42,7 @@ To successfully complete this task, you must meet the following prerequisites:<b
 ####  Use case
 
 You are an incident response analyst currently investigating a prolonged incident.<br> 
-Your colleague has provided you with a CSV file containing DNS lookup activity from the DNS server<br>
+Your colleague has provided you with a Json file containing DNS lookup activity from the DNS server<br>
 
 
 **Your task is:**<br>
