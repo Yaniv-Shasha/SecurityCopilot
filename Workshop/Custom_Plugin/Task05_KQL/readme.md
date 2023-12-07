@@ -44,25 +44,16 @@ As this incident created in an air-gap environment, the analyst from Woodgrove-a
 **Your task is:**<br>
 
 1. Fetch air-gapped sentinel incident into Copilot Session memory. 
-2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly.
+2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly. 
+  hint: YOU CAN DO IT BY TYPE */wood* <br> 
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5d4c5f29d1b3cca6239fb227690ab9dce3272cc7/Workshop/Custom_Plugin/Task05_KQL/images/call_plugin.jpg"/>
 
+3. search the victim user from the incident <br> 
 
-3. Employ the MDTI reputation score to assess these Ip.
-4. Identify IPs with scores
-5. In order to compile a report with your findings, utilize the custom plugin you recently uploaded to GeoIP the suspicious Ips.
-6. Share report that include the reputation score and the Geo IP data.
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/1a379fee910284aa03dfb5a3f21a17f0bbd97094/Workshop/Custom_Plugin/Task05_KQL/images/add_paramter.jpg"/>
 
-**Bouns task:**<br>
-
-1. Copy the script from script_decode.txt .<br> 
-
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/c0aca523fb19d99c430f0c1401b431f6b54439d9/Workshop/Custom_Plugin/Task04_GEO_IP_script/images/decode.png"/>
-
-2. Open the Suspicious Script analysis
-3. past the Script you copief in setp one into the prompts and press run 
-4. share the report and notice if this script was malicious
+5. Generate report that includes the incident summary and the user enriched data from the WoodgroveHR.
 
 
 ####   Example prompts:
