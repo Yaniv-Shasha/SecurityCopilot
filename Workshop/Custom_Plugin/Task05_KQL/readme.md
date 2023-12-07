@@ -36,7 +36,7 @@ To successfully complete this task, you must meet the following prerequisites:<b
 
 > ⭐ Notice: <br>
 
-To obtain the Tenant ID, Subscription ID, Resource Group, and Log Analytics Workspace name, please refer to the Azure documentation. <br>
+To obtain the **Tenant ID, Subscription ID, Resource Group, and Log Analytics Workspace name**, please refer to the Azure documentation. <br>
 
 4. Upload the custom plugin and confirm its activation.<br>
 
@@ -58,6 +58,12 @@ Given that this incident occurred in an air-gapped environment, your colleague f
 **Your task is:**<br>
 
 1. Fetch air-gapped sentinel incident into Copilot Session memory. 
+> ⭐ Notice: <br>
+
+To use the FetchURL option, the Public **Web plugin** must be enabled
+
+<img src="./images/public_web.jpg"/><br>
+
 2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly. <br> 
   Hint: you can do it by typing  **/wood** <br> 
 
