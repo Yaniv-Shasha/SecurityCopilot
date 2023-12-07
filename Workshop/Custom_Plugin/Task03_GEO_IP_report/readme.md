@@ -15,6 +15,11 @@ Upon completing this technical guide, you will gain the following abilities:<br>
 
 ### Scenario
 In this technical workshop, participants will learn how to upload a Security Copilot custom plugin of the API type.<br> 
+
+> ⭐ Notice: <br>
+**When utilizing a custom plugin from an API type, be aware that data is transferred out of your tenant and sent to a remote endpoint. In this lab, we are working with sample data. Please keep this in consideration when handling internal data.**
+:<br>
+
 To successfully complete this task, you must meet the following prerequisites:<br>
 
 * You need your own tenant and Security Copilot instance.<br>
