@@ -35,7 +35,7 @@ To successfully complete this task, you must meet the following prerequisites:<b
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/upload_plugin.jpg"/>
 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/plugin_turn_on.jpg"/>
+<img src="./images/plugin_turn_on.jpg"/>
 
 
 ####  Use case
@@ -49,7 +49,7 @@ Your SOC manager has requested that you include both the IP address and its comp
 
 **Your task is:**<br>
 
-1. input this information from the CSV into Copilot Pilot.(use the raw version)
+1. Input this information from the CSV into Copilot Pilot.(use the raw version)
 2. Extract only the IPs from this file.
 3. Employ the MDTI reputation score to assess these Ips.
 4. Identify IPs with scores exceeding 75.
@@ -64,6 +64,14 @@ Your SOC manager has requested that you include both the IP address and its comp
 ####   Example prompts:
 
 1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task03_GEO_IP_report/CiscoSEG.csv<br> 
+
+> ⭐ Notice: <br>
+
+to be able to use Fetchurl opetion the **Public web** plugin, need to be enable
+
+<img src="./images/public_web.jpg"/>
+
+<br> 
 
 2. From this file distinct all the DeviceAddress.<br> 
 
