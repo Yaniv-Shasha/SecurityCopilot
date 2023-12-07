@@ -64,6 +64,8 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 1. Decode the above script "Replace this with the script you copied".<br> 
 
+<img src="./images/decode.png"/>
+
 2. check reputation score for the above ip.<br> 
 
 3. Use Geo location for the above IP.<br> 
@@ -82,7 +84,8 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 1. Copy the script from script_decode.txt .<br> 
 
-<img src="./images/decode.png"/>
+<img src="./images/prompbooks.jpg"/> <br> 
+
 
 2. Launch the 'Suspicious Script Analysis' tool Promptbooks.
 3. Paste the script you copied in Step One into the designated field and click 'Run'. 
