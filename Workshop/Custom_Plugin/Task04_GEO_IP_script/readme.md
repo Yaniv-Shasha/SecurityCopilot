@@ -1,5 +1,8 @@
 # Introduction 
 
+#### 🎓 Level: 100 (Beginner)
+#### ⌛ Estimated time to complete this lab: 10 minutes
+
 ### Objectives
 
 Upon completing this technical guide, you will gain the following abilities:<br>
@@ -29,14 +32,14 @@ To successfully complete this task, you must meet the following prerequisites:<b
 #### Upload the Custom Plugin 
 
 
-1. Obtain the file named "Geo.yaml" from this directory.<br>
+1. Obtain the file named **"Geo.yaml"** from this directory.<br>
 2. Inspect it to appreciate the simplicity of creating a API-type plugin.<br>
 3. Upload the custom plugin and verify if it's activated.<br>
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/upload_plugin.jpg"/>
+<img src="./images/upload_plugin.jpg"/>
 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/plugin_turn_on.jpg"/>
+<img src="./images/plugin_turn_on.jpg"/>
 
 
 ####  Use case
@@ -59,7 +62,7 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 
 1. Copy the script from script_decode.txt .<br> 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/c0aca523fb19d99c430f0c1401b431f6b54439d9/Workshop/Custom_Plugin/Task04_GEO_IP_script/images/decode.png"/>
+<img src="./images/decode.png"/>
 
 2. Open the Suspicious Script analysis
 3. past the Script you copief in setp one into the prompts and press run 
