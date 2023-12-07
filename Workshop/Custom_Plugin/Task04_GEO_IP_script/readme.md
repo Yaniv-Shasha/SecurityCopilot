@@ -11,6 +11,11 @@ Upon completing this technical guide, you will gain the following abilities:<br>
 
 ### Scenario
 In this technical workshop, participants will learn how to upload a Security Copilot custom plugin of the API type.<br> 
+
+> ⭐ Notice: <br>
+**When utilizing a custom plugin from an API type, be aware that data is transferred out of your tenant and sent to a remote endpoint. In this lab, we are working with sample data. Please keep this in consideration when handling internal data.**
+<br>
+
 To successfully complete this task, you must meet the following prerequisites:<br>
 
 · You need your own tenant and Security Copilot instance.<br>
@@ -72,6 +77,8 @@ You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigati
 4. create report that include the reputation score and the Geo Ip address.<br> 
 
 
-#### Final results:
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/b6515cc05c037db8e9118bcb1dcbe5c458d2fbd7/Workshop/Custom_Plugin/Task04_GEO_IP_script/images/final_free%20text.png"/>
+####  ✅  Final Results:
+
+
+<img src="./images/final_free%20text.png"/>
 
