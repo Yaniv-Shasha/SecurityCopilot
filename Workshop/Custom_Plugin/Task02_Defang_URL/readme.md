@@ -29,7 +29,7 @@ To successfully complete this task, you must meet the following prerequisites:<b
 #### Upload the Custom Plugin 
 
 
-1. Obtain the file named "DefangsURLs.yaml" from this directory.<br>
+1. Obtain the file named **"DefangsURLs.yaml"** from this directory.<br>
 2. Inspect it to appreciate the simplicity of creating a GPT-type plugin.<br>
 3. Upload the custom plugin and verify if it's activated.<br>
 
