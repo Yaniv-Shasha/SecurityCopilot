@@ -31,6 +31,9 @@ To successfully complete this task, you must meet the following prerequisites:<b
 
 #### Upload the Custom Plugin 
 
+> ⭐ Notice: <br>
+If you have already completed Module 4, there is no need to upload the plugin again.<br>
+
 
 1. Obtain the file named **"Geo.yaml"** from this directory.<br>
 2. Inspect it to appreciate the simplicity of creating a API-type plugin.<br>
