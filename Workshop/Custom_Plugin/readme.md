@@ -18,6 +18,6 @@ By utilizing custom plugins, users can harness the expansive knowledge of Securi
 
 ## Modules
 
-[**Module 1 – The fun module- Logicapp plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task01_Send_jokeByemail/Readme.MD)
+[**Module 1 – The fun module- Logicapp plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task01_Send_jokeByemail/readme.md)
 [**Module 2 – DefangUrl - GPT plugin**](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/Workshop/Custom_Plugin/Task02_Defang_URL/readme.md)
 
