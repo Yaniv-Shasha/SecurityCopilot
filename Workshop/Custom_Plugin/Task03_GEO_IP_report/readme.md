@@ -18,7 +18,7 @@ In this technical workshop, participants will learn how to upload a Security Cop
 
 > ⭐ Notice: <br>
 **When utilizing a custom plugin from an API type, be aware that data is transferred out of your tenant and sent to a remote endpoint. In this lab, we are working with sample data. Please keep this in consideration when handling internal data.**
-:<br>
+<br>
 
 To successfully complete this task, you must meet the following prerequisites:<br>
 
