@@ -1,5 +1,8 @@
 # Introduction 
 
+#### 🎓 Level: 100 (Beginner)
+#### ⌛ Estimated time to complete this lab: 10 minutes
+
 ### Objectives
 
 Upon completing this technical guide, you will gain the following abilities:<br>
@@ -25,7 +28,7 @@ To successfully complete this task, you must meet the following prerequisites:<b
 #### Upload the Custom Plugin 
 
 
-1. Obtain the file named "Geo.yaml" from this directory.<br>
+1. Obtain the file named **"Geo.yaml"** from this directory.<br>
 2. Inspect it to appreciate the simplicity of creating a API-type plugin.<br>
 3. Upload the custom plugin and verify if it's activated.<br>
 
@@ -56,11 +59,11 @@ Your SOC manager has requested that you include both the IP address and its comp
 
 ####  How to accomplish this
 
-1. Use the "fetchurl" skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file.<br> 
+1. Use the **"fetchurl"** skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file.<br> 
 
 ####   Example prompts:
 
-1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task03_GEO_IP_report/CiscoSEG.csv.<br> 
+1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task03_GEO_IP_report/CiscoSEG.csv<br> 
 
 2. From this file distinct all the DeviceAddress.<br> 
 
