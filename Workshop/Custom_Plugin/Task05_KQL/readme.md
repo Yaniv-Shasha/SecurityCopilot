@@ -51,7 +51,7 @@ Given that this incident occurred in an air-gapped environment, your colleague f
 
 1. Fetch air-gapped sentinel incident into Copilot Session memory. 
 2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly. <br> 
-  Hint: YOU CAN DO IT BY TYPE **/wood** <br> 
+  Hint: you can do it by typing  **/wood** <br> 
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5d4c5f29d1b3cca6239fb227690ab9dce3272cc7/Workshop/Custom_Plugin/Task05_KQL/images/call_plugin.jpg"/>
 
