@@ -1,5 +1,8 @@
 # Introduction 
 
+#### 🎓 Level: 100 (Beginner)
+#### ⌛ Estimated time to complete this lab: 10 minutes
+
 ### Objectives
 
 After finishing this technical guide, you will acquire the following skills:<br>
@@ -25,18 +28,23 @@ To successfully complete this task, you must meet the following prerequisites:<b
 
 1. Retrieve the file titled **"UsersHR.yml"** from the specified directory..<br>
 2. Examine a plugin of the KQL type.<br>
-3. Alter the configuration in the YAML file to include your subscription, resource group, and log analytics workspace.<br>
+3. Alter the configuration in the YAML file to include your subscription, resource group (where sentinel to deploy), and log analytics workspace (where sentinel is deploy).<br>
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/0d8e25046b72a18262ca6dbf238a018f37e7d447/Workshop/Custom_Plugin/Task05_KQL/images/update_config.jpg"/>
+<img src="./images/update_config.jpg"/>
 
 <br>
+
+> ⭐ Notice: <br>
+
+To obtain the Tenant ID, Subscription ID, Resource Group, and Log Analytics Workspace name, please refer to the Azure documentation. <br>
+
 4. Upload the custom plugin and confirm its activation.<br>
 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5cd2b8bb01eb8e3762371631aef03dd55697aded/Workshop/Custom_Plugin/Task03_GEO_IP_report/images/upload_plugin.jpg"/>
+<img src="./images/upload_plugin.jpg"/>
 
 <br>
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8f8d876b47d68b620e7815ab584bdf382457073d/Workshop/Custom_Plugin/Task05_KQL/images/upload_plugin_wood.jpg"/>
+<img src="./images/upload_plugin_wood.jpg"/>
 
 
 ####  Use case
@@ -53,11 +61,11 @@ Given that this incident occurred in an air-gapped environment, your colleague f
 2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly. <br> 
   Hint: you can do it by typing  **/wood** <br> 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/5d4c5f29d1b3cca6239fb227690ab9dce3272cc7/Workshop/Custom_Plugin/Task05_KQL/images/call_plugin.jpg"/>
+<img src="./images/call_plugin.jpg"/>
 
 3. Search the victim user from the incident <br> 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/1a379fee910284aa03dfb5a3f21a17f0bbd97094/Workshop/Custom_Plugin/Task05_KQL/images/add_paramter.jpg"/>
+<img src="./images/add_paramter.jpg"/>
 
 4. Generate report that includes the incident summary and the user enriched data from the WoodgroveHR.<br> 
 
@@ -75,6 +83,6 @@ Given that this incident occurred in an air-gapped environment, your colleague f
 <br> 
 
 
-#### Final results:
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/624416689c40b5d2bcc357bc4e40af7f612cadd0/Workshop/Custom_Plugin/Task05_KQL/images/final_results.jpg"/>
+####  ✅  Final Results:
+<img src="./images/final_results.jpg"/>
 
