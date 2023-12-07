@@ -4,16 +4,16 @@
 
 Upon completing this technical guide, you will gain the following abilities:<br>
 
-· Upload a Security Copilot custom plugin of the Logic App type.<br>
-· Deploy an Azure Logic App capable of handling Security Copilot prompts.<br>
-· Create a Security Copilot session that triggers this Logic App.<br>
+* Upload a Security Copilot custom plugin of the Logic App type.<br>
+* Deploy an Azure Logic App capable of handling Security Copilot prompts.<br>
+* Create a Security Copilot session that triggers this Logic App.<br>
 
 #### Scenario
 In this technical workshop, participants will learn how to upload a Security Copilot custom plugin of the Logic App type and deploy the corresponding Logic App. To successfully complete this task, you must meet the following prerequisites:<br>
 
-· You need your own tenant and Security Copilot instance.<br>
-· You should have permission to upload a custom plugin.<br>
-· You should have permission to deploy a Logic App.<br>
+* You need your own tenant and Security Copilot instance.<br>
+* You should have permission to upload a custom plugin.<br>
+* You should have permission to deploy a Logic App.<br>
 
 
 ####  Instruction
