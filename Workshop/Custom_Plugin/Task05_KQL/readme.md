@@ -36,15 +36,19 @@ To successfully complete this task, you must meet the following prerequisites:<b
 
 ####  Use case
 
-
-You are Soc Analyst in woodgrove Domain, During an endpoint Incident investigation, you found suspicious script that run on your DMZ server, your job is to analyze this script, and share your final to your team member.<br> 
+You are Soc Analyst in Woodgrove Domain, During an a SAP Incident investigation, you found a suspicious user that download file from SAP system, to act fast, you need to enrich the user quickly with information that located in your HR system name **WoodgroveHR**.<br> 
+As this incident created in an air-gap environment, the analyst from Woodgrove-airgap shared the incident in a Json format that you need to retrieve..<br> 
 
 
 
 **Your task is:**<br>
 
-1. Input this information about the script from the script_decode.txt and ask Copilot to decode it
-2. Extract only the IPs from this script.
+1. Fetch air-gapped sentinel incident into Copilot Session memory. 
+2. Use  **WoodgroveHR User Directory** custom plugin you just uploaded and call it explicitly.
+
+<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/c0aca523fb19d99c430f0c1401b431f6b54439d9/Workshop/Custom_Plugin/Task04_GEO_IP_script/images/decode.png"/>
+
+
 3. Employ the MDTI reputation score to assess these Ip.
 4. Identify IPs with scores
 5. In order to compile a report with your findings, utilize the custom plugin you recently uploaded to GeoIP the suspicious Ips.
