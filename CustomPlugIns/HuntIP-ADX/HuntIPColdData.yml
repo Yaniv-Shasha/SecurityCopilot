@@ -1,11 +1,11 @@
 Descriptor:
   Name: Hunting IP historical data
   DisplayName: ADX IP hunt
-  Description: Hunting IP historical data
+  Description: hunting IP historical data
 SkillGroups:
   - Format: KQL
     Skills:
-      - Name: HuntIPColdData
+      - Name: huntipcolddata
         DisplayName: Hunting IP historical data
         Description: search Ip on cold storage on Azure data explorer
         Inputs:
