@@ -41,7 +41,6 @@ To deploy the above logic app, you need to<br>
 •   To run the logic in automatic way, create an automation rule in sentinel and connect this playbook as the action for this rule.<br>
 
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/ccbd305c539800eea2a1f7c1a0905aff954e2e25/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/full_logic_app.jpg"/>
 
 <img src="./images/designer.png"/>
 
