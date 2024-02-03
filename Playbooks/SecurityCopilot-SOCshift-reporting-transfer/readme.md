@@ -46,6 +46,9 @@ To deploy the above logic app, you need to<br>
 
 #### The Email Report example
 
+</br>
 <img src="./images/email_report.png"/>
+
+</br>
 
 
