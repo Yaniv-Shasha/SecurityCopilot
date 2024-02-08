@@ -12,21 +12,4 @@ Author: Yaniv Shasha
 
 <br>
 
-### Post Deployment
-
-•   Authenticate with the users mention above (you can use different user for the Copilot actions and to the sentinel actions)<br>
-•   To run the logic app in a manual way, open Microsoft Sentinel incident page, right click on specific incident and press run playbook, select logic app you just deploy and press run.<br>
-•   To run the logic in automatic way, create an automation rule in sentinel and connect this playbook as the action for this rule.<br>
-
-
-
-<img src="./images/designer.png"/>
-
-#### The Email Question example
-
-</br>
-<img src="./images/email.png"/>
-
-</br>
-
 
