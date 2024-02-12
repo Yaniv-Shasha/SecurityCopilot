@@ -47,7 +47,7 @@ Your colleague has provided you with a Json file containing DNS lookup activity 
 
 **Your task is:**<br>
 
-1. Fetch DNS information into Copilot Pilot Context session.
+1. Fetch DNS information into the CoPilot Context session.
 
 > ⭐ Notice: <br>
 
@@ -69,15 +69,17 @@ To use the FetchURL option, the Public **Web plugin** must be enabled
 
 ####   Example prompt:
 
-1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task02_Defang_URL/UrlstoFetch_Task02.json.<br> 
+1. `Fetchurl` https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task02_Defang_URL/UrlstoFetch_Task02.json and distinct all URLs.<br>
+   ![image](https://github.com/Yaniv-Shasha/SecurityCopilot/assets/40334679/cebdbc08-6836-487e-8cbd-1346cb07451d)
+ 
+2. Check reputation score for the above <br> 
+    ![image](https://github.com/Yaniv-Shasha/SecurityCopilot/assets/40334679/d5538f01-2b4d-43d7-9ff0-93f03d4cc9f9)
 
-2. Distinct all the DNS query from this file.<br> 
+3. `Defang URLs` for all the domains with reputation score higher than 75
+   ![image](https://github.com/Yaniv-Shasha/SecurityCopilot/assets/40334679/d331321b-0d04-4772-a063-b29d58dbd204)
 
-3. Check reputation score for the above domains.<br> 
-
-4. Defang URL for all the domains with reputation score higher than 75
-
-5. Create report that include only the defanged url and the reputation score.<br> 
+4. Create report that include only the defanged url and the reputation score.<be>
+    ![image](https://github.com/Yaniv-Shasha/SecurityCopilot/assets/40334679/012aacaa-6038-4bed-86ea-89169b09b05a)
 
 ####  ✅  Final Results:
 
