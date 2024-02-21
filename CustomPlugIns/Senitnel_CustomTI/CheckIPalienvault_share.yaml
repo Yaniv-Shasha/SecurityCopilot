@@ -1,0 +1,29 @@
+Descriptor:
+  Name: Check IP against my Alienvault TI
+  DisplayName: "Check IP against Alienvault TI"
+  Description: Skills that looking up IP against my Alienvault TI that sotre in Sentinel
+
+SkillGroups:
+  - Format: KQL
+    Skills:
+      - Name: GetURLClicks
+        DisplayName: Get URL Clicks
+        Description: Fetches all the SafeLinks URL click records for the specified URL
+        Inputs:
+          - Name: IP
+            Description: IP address against my Alienvault TI in sentinel
+            Required: true
+        Settings:
+          Target: Sentinel
+          TenantId: xxxx
+          SubscriptionId: xxxxx
+          ResourceGroupName: xxxxx
+          WorkspaceName: xxxxx
+          Template: |-
+            ThreatIntelligenceIndicator
+            | where TimeGenerated > ago(14d)
+            | where AdditionalInformation startswith 'https://otx.alienvault.com'
+            | where isnotempty(NetworkIP)
+            | where NetworkIP =~ '{{IP}}'
+            | extend IP = NetworkIP
+            | project TimeGenerated , ConfidenceScore , Description , ExpirationDateTime 
