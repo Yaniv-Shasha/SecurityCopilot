@@ -42,12 +42,12 @@ To successfully complete this task, you must meet the following prerequisites:<b
 ####  Use case
 
 You are an incident response analyst currently investigating a prolonged incident.<br> 
-Your colleague has provided you with a Json file containing DNS lookup activity from the DNS server<br>
+Your colleague has provided you with a JSON file containing DNS lookup activity from the DNS server<br>
 
 
 **Your task is:**<br>
 
-1. Fetch DNS information into Copilot Pilot Context session.
+1. Fetch DNS information into the CoPilot Context session.
 
 > ⭐ Notice: <br>
 
@@ -64,20 +64,22 @@ To use the FetchURL option, the Public **Web plugin** must be enabled
 ####  How to accomplish this
 
 * Use the "fetchurl" skill to access the file located in the same directory. It's important to ensure you retrieve the raw representation of the file.<br> 
-* Use the MDTI skill and the DefangUrl to create report.
+* Use the MDTI skill and the DefangUrl to create a report.
 
 
 ####   Example prompt:
 
-1. Fetchurl https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task02_Defang_URL/UrlstoFetch_Task02.json.<br> 
+1. `Fetchurl` https://raw.githubusercontent.com/Yaniv-Shasha/SecurityCopilot/main/Workshop/Custom_Plugin/Task02_Defang_URL/UrlstoFetch_Task02.json and distinct all URLs.<br>
+   ![image](https://github.com/Yaniv-Shasha/SecurityCopilot/assets/40334679/cebdbc08-6836-487e-8cbd-1346cb07451d)
+ 
+2. Check the reputation score for the above domains<br> 
+    ![image](https://github.com/Yaniv-Shasha/SecurityCopilot/assets/40334679/d5538f01-2b4d-43d7-9ff0-93f03d4cc9f9)
 
-2. Distinct all the DNS query from this file.<br> 
+3. `Defang URLs` for all the domains with a reputation score higher than 75
+   ![image](https://github.com/Yaniv-Shasha/SecurityCopilot/assets/40334679/d331321b-0d04-4772-a063-b29d58dbd204)
 
-3. Check reputation score for the above domains.<br> 
-
-4. Defang URL for all the domains with reputation score higher than 75
-
-5. Create report that include only the defanged url and the reputation score.<br> 
+4. Create a report that includes only the defanged URL and the reputation score.<be>
+    ![image](https://github.com/Yaniv-Shasha/SecurityCopilot/assets/40334679/012aacaa-6038-4bed-86ea-89169b09b05a)
 
 ####  ✅  Final Results:
 
