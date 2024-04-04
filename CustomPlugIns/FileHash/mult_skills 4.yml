@@ -1,0 +1,113 @@
+Descriptor:
+  Name: File Hash Analysis
+  DisplayName: File Hash Analysis
+  Description: Set of skills for analyzing file hashes within the organization..
+SkillGroups:
+  - Format: KQL
+    Skills:
+      - Name: NumberDevicesHash 
+        DisplayName: NumberDevicesHash 
+        Description: Total number of devices within the environment with the corresponding hash
+        ExamplePrompt:
+        - 'Identify the total number of devices in the environment associated with the provided hash.'
+        - 'Obtain the count of devices within the environment linked to the specified hash.'
+        - 'Utilize the skill to determine the total number of devices correlated with the given hash in the environment.'
+        - 'Access the total count of devices within the environment with the corresponding hash.'
+        - 'Investigate and determine the total number of devices within the environment with the specified hash.'
+        - 'Obtain the total count of devices within the environment sharing the specified hash.'
+        - 'Utilize the skill to generate a report on the total number of devices connected to the provided hash.'
+        - 'Discover and determine the total number of devices within the environment associated with the provided hash.'
+        - 'Access a breakdown of the total number of devices within the environment linked to the specified hash.'
+        - 'Retrieve the total count of devices within the environment sharing the specified hash'
+        Inputs:
+          - Name: filehash256
+            Description: File hash256 as a string, without commas or other separators 
+            Required: true
+        Settings:
+          Target: defender
+          Template: |-
+            let filehash = '{{filehash256}}';
+            DeviceFileEvents 
+            | where Timestamp > ago(30d)
+            | where SHA256 =~ filehash
+            | summarize count() by DeviceName
+            | project count_
+      - Name: ListDefenderDeviceswithHash
+        DisplayName: ListDefenderDeviceswithHash
+        Description: Lists devices within the environment with the corresponding hash.
+        ExamplePrompt:
+            - 'Identify all devices in the environment linked to the specified hash.'
+            - 'List all devices within the environment that share the provided hash.'
+            - 'Access a comprehensive list of devices correlated with the given hash in the environment.'
+            - 'Utilize the skill to compile a detailed inventory of devices associated with the provided hash.'
+            - 'Investigate and list all devices within the environment with the corresponding hash.'
+            - 'Obtain a summary of devices within the environment sharing the specified hash.'
+            - 'Utilize the skill to generate a report listing all devices connected to the provided hash.'
+            - 'Discover and list all devices within the environment associated with the provided hash.'
+            - 'Access a breakdown of devices within the environment linked to the specified hash.'
+        Inputs:
+          - Name: filehash256
+            Description: File hash256 as a string, without commas or other separators 
+            Required: true
+        Settings:
+          Target: defender
+          Template: |-
+                  let filehash = '{{filehash256}}';
+                  DeviceFileEvents 
+                  | where Timestamp > ago(30d)
+                  | where SHA256 =~ filehash
+                  | summarize count() by DeviceName
+                  | project DeviceName
+      - Name: FindSourceURLFromHash
+        DisplayName: FindSourceURLFromHash
+        Description: enables the identification of the source URL and IP address associated with a given hash through Defender
+        ExamplePrompt:
+            - 'Discover the source URL and IP address linked to the provided hash using Defender.'
+            - 'Identify the origin URL and IP associated with the hash with the assistance of Defender.'
+            - 'Utilize Defender to reveal the source URL and IP address corresponding to the provided hash.'
+            - 'Investigate the source URL and IP address of the hash utilizing Defender capabilities.'
+            - 'Access insights on the source URL and IP address connected to the hash through Defender.'
+            - 'Gain visibility into the origin URL and IP address related to the hash with the aid of Defender.'
+            - 'Uncover the source URL and IP address associated with the provided hash using Defender.'
+            - 'Utilize Defender to track down the source URL and IP address linked to the hash.'
+            - 'Leverage Defender to identify the source URL and IP address for the specified hash.'
+            - 'Explore the source URL and IP address of the hash with the assistance of Defender.'
+        Inputs:
+         - Name: filehash256
+           Description: List Defender Devices with Specific SHA256
+           Required: true
+        Settings:
+          Target: defender
+          Template: |-
+                  let filehash = '{{filehash256}}';
+                  DeviceNetworkEvents 
+                  | where Timestamp > ago(30d)
+                  | where InitiatingProcessSHA256 =~ filehash
+                  | project RemoteUrl, RemoteIP
+      - Name: HashParentProcess
+        DisplayName: HashParentProcess
+        Description: Retrieves the primary parent process of the hash with the corresponding SHA256 value.
+        ExamplePrompt:
+            - 'Find the primary parent process associated with the SHA256 hash.'
+            - 'Retrieve the main parent process linked to the given SHA256 hash.'
+            - 'Identify the primary process parent for the specified SHA256 hash.'
+            - 'What is the primary process that spawned the file with this SHA256 hash'
+            - 'Discover the primary parent process for the provided SHA256 hash value.'
+            - 'Locate the main process related to the SHA256 hash provided.'
+            - 'Get details on the primary parent process for the specified SHA256 hash.'
+            - 'Investigate the primary parent process associated with this SHA256 hash.'
+            - 'Examine the primary process origin for the given SHA256 hash.'
+            - 'Retrieve information on the main process linked to the SHA256 hash.'
+        Inputs:
+         - Name: filehash256
+           Description: file hash256 as string
+           Required: true
+        Settings:
+          Target: defender
+          Template: |-
+                  let filehash = '{{filehash256}}';
+                  DeviceFileEvents 
+                  | where Timestamp > ago(30d)
+                  | where SHA256 =~ filehash
+                  | project InitiatingProcessParentFileName
+                  | distinct InitiatingProcessParentFileName
