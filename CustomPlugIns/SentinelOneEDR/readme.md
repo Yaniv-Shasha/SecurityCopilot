@@ -36,21 +36,21 @@ Welcome to the SentinelOne custom plugin! Here, you'll unlock powerful functiona
                                         #ExamplePrompts Extract a catalog of installed programs from a specified agent's system using SentinelOne<br>.
                                         #ExamplePrompts Access the inventory of installed applications tied to a particular SentinelOne agent.<br>
                                         #ExamplePrompts Fetch a report detailing the software installations associated with a specific SentinelOne endpoint.<br>
-**Get_S1_Threats**  Get data of threats that match the filter. Best Use the filters. Each threat gives a number of data lines that will quickly fill the page limit.<br>
+- **Get_S1_Threats**  Get data of threats that match the filter. Best Use the filters. Each threat gives a number of data lines that will quickly fill the page limit.<br>
                                       #ExamplePrompts Retrieve threat data using SentinelOne's platform.<br>
                                       #ExamplePrompts Fetch threat information with SentinelOne integration.<br>
                                       #ExamplePrompts Access threat data that matches the filter using SentinelOne.<br>
                                       #ExamplePrompts Gather threat details efficiently by utilizing the filters with SentinelOne.<br>
                                       #ExamplePrompts Obtain threat data lines that quickly fill the page limit with SentinelOne.<br>
                                       #ExamplePrompts Utilize the 'Get_S1_Threats' operation in SentinelOne to retrieve threat data.<br>
-**Get_Hash_S1_Reputation** Get the reputation of a hash, given the required SHA1. To get hash, run "threats" (best if filtered for a Group or Site) and take the file Content Hash value.<br>
+- **Get_Hash_S1_Reputation** Get the reputation of a hash, given the required SHA1. To get hash, run "threats" (best if filtered for a Group or Site) and take the file Content Hash value.<br>
                                       #ExamplePrompts Retrieve the reputation of a hash using SentinelOne.<br>
                                       #ExamplePrompts Fetch the reputation score of a hash with SentinelOne integration.<br>
                                       #ExamplePrompts Access the reputation details for a specific hash using SentinelOne's platform.<br>
                                       #ExamplePrompts Gather the reputation information for a hash with the required SHA1 using SentinelOne.<br>
                                       #ExamplePrompts Obtain the reputation score for a hash, utilizing SentinelOne's reputation service.<br>
                                       #ExamplePrompts Utilize the 'Get_Hash_Reputation' operation in SentinelOne to retrieve the reputation of a hash.<br>
-**Get_S1_EventsTimeline** Get the timestamp of the first and last Events of the threat's attack storyline.<br>
+- **Get_S1_EventsTimeline** Get the timestamp of the first and last Events of the threat's attack storyline.<br>
                                        #ExamplePrompts Retrieve the timeline of events for a specific threat ID using SentinelOne.<br>
                                        #ExamplePrompts Fetch the first and last event timestamps of a threat's attack storyline with SentinelOne integration.<br>
                                        #ExamplePrompts Access the chronological sequence of events associated with a threat ID via SentinelOne's platform.<br>
