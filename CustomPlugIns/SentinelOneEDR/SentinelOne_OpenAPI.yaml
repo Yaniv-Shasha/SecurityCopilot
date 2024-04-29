@@ -1,0 +1,413 @@
+openapi: 3.0.0
+info:
+  title: SentinelOne EDR
+  description: Sentinelone EDR
+  version: "v1"
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+paths:
+  /web/api/v2.1/cloud-detection/alerts:
+                                  get:
+                                      description: |  
+                                        Get Alerts by Rule Name with SentinelOne
+                                        #ExamplePrompts Get Alerts by Rule Name with SentinelOne.
+                                        #ExamplePrompts Filter Alerts by Incident Status with SentinelOne.
+                                        #ExamplePrompts Search Alerts by Source File Path with SentinelOne.
+                                        #ExamplePrompts Limit Number of Returned Alerts with SentinelOne.
+                                        #ExamplePrompts Sort Alerts by Column with SentinelOne.
+                                        #ExamplePrompts Filter Alerts by Severity with SentinelOne.
+                                        #ExamplePrompts Search Alerts by Source Process Name with SentinelOne.
+                                      operationId: Get_S1_alerts
+                                      parameters:
+                                      - description: 'Created at lesser than. Example: "2018-02-27T04:49:26.257525Z".'
+                                        in: query
+                                        name: createdAt__lt
+                                        required: false
+                                        schema:
+                                          type: string
+                                      - description: 'Created at greater than. Example: "2018-02-27T04:49:26.257525Z".'
+                                        in: query
+                                        name: createdAt__gt
+                                        required: false
+                                        schema:
+                                          type: string
+                                      - description: Full text search for all fields
+                                        in: query
+                                        name: query
+                                        required: false
+                                        schema:
+                                          type: string
+                                      - description: 'Severity. Example: "Low".'
+                                        in: query
+                                        name: severity
+                                        required: false
+                                        schema:
+                                          type: string
+                                      - description: 'Free-text filter by source sha1. Example: "rule1".'
+                                        in: query
+                                        name: sourceProcessFileHashSha1__like_any
+                                        required: false
+                                        schema:
+                                          type: string
+                                      - description: 'Limit number of returned items (1-1000). Example: "10".'
+                                        in: query
+                                        name: limit
+                                        required: false
+                                        schema:
+                                          type: string
+                                      - description: 'Free-text filter by source process name. Example: "proc1.exe".'
+                                        in: query
+                                        name: sourceProcessName__like_any
+                                        required: false
+                                        schema:
+                                          type: string
+                                      - description: 'Free-text filter by agent name. Example: "ilia". also include computername'
+                                        in: query
+                                        name: origAgentName__contains
+                                        required: false
+                                        schema:
+                                          type: string
+                                      - description: 'Filter threats by a analyst verdict. Example: "TRUE_POSITIVE".'
+                                        in: query
+                                        name: analystVerdict
+                                        required: false
+                                        schema:
+                                          type: string
+                                      summary: Get Application                  
+                                      responses:
+                                        default:
+                                          description: default
+                                          content:
+                                            text/plain:
+                                              schema:
+                                                type: string
+                                                example:                 
+  /web/api/v2.1/agents/applications:
+                                  get:
+                                      description: |  
+                                        Get the installed applications for a specific Agent with SentinelOne
+                                        #ExamplePrompts Retrieve the list of installed software on a designated device using SentinelOne.
+                                        #ExamplePrompts Gather data on the software installations linked to a specific agent utilizing SentinelOne.
+                                        #ExamplePrompts Acquire information about the applications currently deployed on a designated machine via SentinelOne.
+                                        #ExamplePrompts Extract a catalog of installed programs from a specified agent's system using SentinelOnee.
+                                        #ExamplePrompts Access the inventory of installed applications tied to a particular SentinelOne agent.
+                                        #ExamplePrompts Fetch a report detailing the software installations associated with a specific SentinelOne endpoint.
+                                      operationId: Get_S1_Application
+                                      parameters:
+                                          - description: 'Agent ID list or single value. Example: "225494730938493804,225494730938493915". this can be come as Machine ID paramter'
+                                            in: query
+                                            name: ids
+                                            required: true
+                                            schema:
+                                             type: string
+                                      summary: Get Application                  
+                                      responses:
+                                        default:
+                                          description: default
+                                          content:
+                                            text/plain:
+                                              schema:
+                                                type: string
+                                                example: ''
+  /web/api/v2.1/threats:
+                                  get:
+                                    description: |
+                                      Get data of threats that match the filter. Best Use the filters. Each threat gives a number of data lines that will quickly fill the page limit.
+                                      #ExamplePrompts Retrieve threat data using SentinelOne's platform.
+                                      #ExamplePrompts Fetch threat information with SentinelOne integration.
+                                      #ExamplePrompts Access threat data that matches the filter using SentinelOne.
+                                      #ExamplePrompts Gather threat details efficiently by utilizing the filters with SentinelOne.
+                                      #ExamplePrompts Obtain threat data lines that quickly fill the page limit with SentinelOne.
+                                      #ExamplePrompts Utilize the 'Get_S1_Threats' operation in SentinelOne to retrieve threat data.
+                                    operationId: Get_S1_Threats
+                                    parameters:
+                                        - description: 'Free-text filter by file path (supports multiple values). Example:
+                                            "\MyUser\Downloads".'
+                                          in: query
+                                          name: filePath__contains
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'List of Agent IDs. Example: "225494730938493804,225494730938493915".'
+                                          in: query
+                                          name: agentIds
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Created at greater or equal than. Example: "2018-02-27T04:49:26.257525Z".'
+                                          in: query
+                                          name: createdAt__gte
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Exclude threats with specific incident statuses. Example: "unresolved,in_progress".'
+                                          in: query
+                                          name: incidentStatusesNin
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Free-text filter by the username that initiated that threat
+                                            (supports multiple values). Example: "John,John Doe".'
+                                          in: query
+                                          name: initiatedByUsername__contains
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'The column to sort the results by. Example: "id".'
+                                          in: query
+                                          name: sortBy
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Free-text filter by threat details(supports multiple values).
+                                            Example: "malware.exe,virus.exe".'
+                                          in: query
+                                          name: threatDetails__contains
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'List of sha1 hashes to search for. Example: "d,d,d,5,0,3,0,a,3,d,0,2,9,f,3,8,4,5,f,c,1,0,5,2,4,1,9,8,2,9,f,0,8,f,3,1,2,2,4,0".'
+                                          in: query
+                                          name: contentHashes
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: Free-text filter by the originated process name of the threat
+                                            (supports multiple values)
+                                          in: query
+                                          name: originatedProcess__contains
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Created at lesser or equal than. Example: "2018-02-27T04:49:26.257525Z".'
+                                          in: query
+                                          name: createdAt__lte
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Full text search for fields: threat_details, content_hash, computer_name,
+                                            file_path, uuid, detection_agent_version, realtime_agent_version, detection_agent_domain,
+                                            command_line_arguments, initiated_by_username, storyline, originated_process,
+                                            k8s_cluster_name, k8s_node_name, k8s_namespace_name, k8s_namespace_labels,
+                                            k8s_controller_name, k8s_controller_labels, k8s_pod_name, k8s_pod_labels,
+                                            container_name, container_image_name, container_labels, external_ticket_id'
+                                          in: query
+                                          name: query
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Filter threats by a specific incident status. Example: "unresolved,in_progress".'
+                                          in: query
+                                          name: incidentStatuses
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Created at greater than. Example: "2018-02-27T04:49:26.257525Z".'
+                                          in: query
+                                          name: createdAt__gt
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Created at lesser than. Example: "2018-02-27T04:49:26.257525Z".'
+                                          in: query
+                                          name: createdAt__lt
+                                          required: false
+                                          schema:
+                                            type: string
+
+                                        - description: 'Filter threats by a specific analyst verdict. Example: "true_positive,suspicious".'
+                                          in: query
+                                          name: analystVerdicts
+                                          required: false
+                                          schema:
+                                            type: string
+                                        - description: 'Free-text filter by computer name (supports multiple values).
+                                            Example: "john-office,WIN".'
+                                          in: query
+                                          name: computerName__contains
+                                          required: false
+                                          schema:
+                                            type: string
+                                    summary: Get_Threats                 
+                                    responses:
+                                        default:
+                                          description: default
+                                          content:
+                                            text/plain:
+                                              schema:
+                                                type: string
+                                                example: ''
+  /web/api/v2.1/hashes/{hash}/reputation:
+                                  get:
+                                    description: |
+                                      Get the reputation of a hash, given the required SHA1. To get a
+                                      hash, run "threats" (best if filtered for a Group or Site) and take the fileContentHash
+                                      value.
+                                      #ExamplePrompts Retrieve the reputation of a hash using SentinelOne.
+                                      #ExamplePrompts Fetch the reputation score of a hash with SentinelOne integration.
+                                      #ExamplePrompts Access the reputation details for a specific hash using SentinelOne's platform.
+                                      #ExamplePrompts Gather the reputation information for a hash with the required SHA1 using SentinelOne.
+                                      #ExamplePrompts Obtain the reputation score for a hash, utilizing SentinelOne's reputation service.
+                                      #ExamplePrompts Utilize the 'Get_Hash_Reputation' operation in SentinelOne to retrieve the reputation of a hash.
+                                    operationId: Get_Hash_S1_Reputation
+                                    parameters:
+                                    - description: Hash1 string
+                                      in: path
+                                      name: hash
+                                      required: true
+                                      schema:
+                                        type: string
+                                    summary: Hash Reputation             
+                                    responses:
+                                        default:
+                                          description: default
+                                          content:
+                                            text/plain:
+                                              schema:
+                                                type: string
+                                                example: ''
+  /web/api/v2.1/threats/{threat_id}/timeline:
+                                  get:
+                                    description: |
+                                       Get the timestamp of the first and last Events of the threat's attack storyline.
+                                       #ExamplePrompts Retrieve the timeline of events for a specific threat ID using SentinelOne.
+                                       #ExamplePrompts Fetch the first and last event timestamps of a threat's attack storyline with SentinelOne integration.
+                                       #ExamplePrompts Access the chronological sequence of events associated with a threat ID via SentinelOne's platform.
+                                       #ExamplePrompts Gather the timeline details, including the initial and final event timestamps, for a threat's attack storyline using SentinelOne.
+                                       #ExamplePrompts Obtain the event timeline for a threat, indicating the onset and conclusion of the attack with SentinelOne.
+                                       #ExamplePrompts Utilize the 'Get_S1_EventsTimeline' operation in SentinelOne to retrieve the timeline of events linked to a threat ID.
+                                    operationId: Get_S1_EventsTimeline
+                                    parameters:
+                                    - description: single threat id
+                                      in: path
+                                      name: threat_id
+                                      required: true
+                                      schema:
+                                        type: string
+                                    summary: Get Timeline Limits   
+                                    responses:
+                                        default:
+                                          description: default
+                                          content:
+                                            text/plain:
+                                              schema:
+                                                type: string
+                                                example: ''
+  /web/api/v2.1/agents:
+                                  get:
+                                    description: |  
+                                        Get the Agents, and their data, that match the filter. This command gives the Agent ID, which you can use in other commands.
+                                        #ExamplePrompts Retrieve agent information and their data from SentinelOne EDR product.
+                                        #ExamplePrompts Fetch agent details and related data with Sentinel One integration.
+                                        #ExamplePrompts Access agent data seamlessly with SentinelOne EDR.
+                                        #ExamplePrompts Gain insights into agent information through SentinelOne integration.
+                                        #ExamplePrompts Get agent IDs and related data for enhanced security operations with SentinelOne.
+                                        #ExamplePrompts Utilize SentinelOne EDR platform to retrieve agent information effortlessly.
+                                    operationId: Get_S1_DeviceInfo
+                                    parameters:
+                                    - description: 'The column to sort the results by. Example: "id".'
+                                      in: query
+                                      name: sortBy
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Free-text filter by local IP (supports multiple values). Example:
+                                        "192,10.0.0".'
+                                      in: query
+                                      name: networkInterfaceInet__contains
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Limit number of returned items (1-1000). Example: "10".'
+                                      in: query
+                                      name: limit
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Included machine types. Example: "laptop,desktop".'
+                                      in: query
+                                      name: machineTypes
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Match computer name partially (substring). Example: "Lab1".'
+                                      in: query
+                                      name: computerName__like
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Computer name. Example: "My Office Desktop".'
+                                      in: query
+                                      name: computerName
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Free-text filter by Active Directory computer groups string
+                                        (supports multiple values). Example: "DC=sentinelone".'
+                                      in: query
+                                      name: adComputerMember__contains
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'A list of Agent IDs. Example: "225494730938493804,225494730938493915".'
+                                      in: query
+                                      name: ids
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Free-text filter by Active Directory computer name string (supports
+                                        multiple values). Example: "DC=sentinelone".'
+                                      in: query
+                                      name: adComputerName__contains
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Free-text filter by computer name (supports multiple values).
+                                        Example: "john-office,WIN".'
+                                      in: query
+                                      name: computerName__contains
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Free-text filter by visible IP (supports multiple values). Example:
+                                        "205,127.0".'
+                                      in: query
+                                      name: externalIp__contains
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Possible number of CPU cores (inclusive). Example: "2-8".'
+                                      in: query
+                                      name: cpuCount__between
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: 'Free-text filter by username (supports multiple values). Example:
+                                        "admin,johnd1".'
+                                      in: query
+                                      name: lastLoggedInUserName__contains
+                                      required: false
+                                      schema:
+                                        type: string
+                                    - description: Free-text filter by K8S version(supports multiple values)
+                                      in: query
+                                      name: K8SVersion__contains
+                                      required: false
+                                      schema:
+                                        type: string
+                                    requestBody:
+                                      content: {}
+                                    responses:
+                                        default:
+                                          description: default
+                                          content:
+                                            text/plain:
+                                              schema:
+                                                type: string
+                                                example: ''
+                                    security:
+                                        - ApiKeyAuth: []
