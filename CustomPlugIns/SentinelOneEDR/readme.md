@@ -1,4 +1,8 @@
-### SentinelOne EDR Custom Plugin
+# SentinelOne EDR Custom Plugin
+
+<p align="center">
+<img src="./images/logo.png?raw=true">
+</p>
 
 Welcome to the SentinelOne custom plugin! Here, you'll unlock powerful functionalities tailored to enhance your SenitnelOne experience:
 ### Instructions
