@@ -1,7 +1,7 @@
 Descriptor:
   Name: SentinelOne
   DisplayName: SentinelOne EDR (Community)
-  Icon: "https://asset.brandfetch.io/idqbZJLrXa/idrAcBFBpY.png?updated=1699470646278"
+  Icon: 'https://www.sentinelone.com/wp-content/themes/sentinelone/assets/svg/header-logo-dark.svg'
   Description: SentinelOne EDR
   Settings: 
     - Description: The URL of the instance to connect to
