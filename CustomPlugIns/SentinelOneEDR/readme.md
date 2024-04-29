@@ -10,7 +10,7 @@ Welcome to the SentinelOne custom plugin! Here, you'll unlock powerful functiona
 
 1. Obtain the file [SentinelOne_Manifest.yaml](https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/CustomPlugIns/SentinelOneEDR/SentinelOne_Manifest.yaml) from this directory.
 2. Upload the custom plugin
-3. Add the SentinelOne Server instance  Url, and API Key
+3. Add the SentinelOne Server instance Url, and API Key
 
 <p align="center">
 <img src="./images/upload_config.png?raw=true">
@@ -18,7 +18,7 @@ Welcome to the SentinelOne custom plugin! Here, you'll unlock powerful functiona
 
 
 
-#### utilization of Plugins:
+## Utilization of Plugins:
 
 - **Get_S1_alerts:** Get Alerts by Rule Name with SentinelOne<br>
                                         #ExamplePrompts Get Alerts by Rule Name with SentinelOne.<br>
@@ -28,6 +28,11 @@ Welcome to the SentinelOne custom plugin! Here, you'll unlock powerful functiona
                                         #ExamplePrompts Sort Alerts by Column with SentinelOne.<br>
                                         #ExamplePrompts Filter Alerts by Severity with SentinelOne.<br>
                                         #ExamplePrompts Search Alerts by Source Process Name with SentinelOne.<br>
+
+<p align="center">
+<img src="./images/get_alerts_input.png?raw=true">
+</p>
+
 - **Get_S1_DeviceInfo** Get the Agents, and their data, that match the filter. This command gives the Agent ID, which you can use in other commands.<br>
                                         #ExamplePrompts Retrieve agent information and their data from SentinelOne EDR product.<br>
                                         #ExamplePrompts Fetch agent details and related data with Sentinel One integration.<br>
