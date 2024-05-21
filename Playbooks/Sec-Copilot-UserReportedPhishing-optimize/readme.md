@@ -50,17 +50,4 @@ To deploy the above logic app, you need to<br>
 
 ###  Full Logic App view
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8ffa89a6dd404ae62881b2ff9b7f0bfb96718a4a/Playbooks/SecCopilot-UserReportedPhishing/images/full_logic_app.jpg"/>
-
-
-###  Phishing condition  
-
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8ffa89a6dd404ae62881b2ff9b7f0bfb96718a4a/Playbooks/SecCopilot-UserReportedPhishing/images/conditations.jpg"/>
-
-###  Notification Email Send 
-
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8ffa89a6dd404ae62881b2ff9b7f0bfb96718a4a/Playbooks/SecCopilot-UserReportedPhishing/images/email_results.jpg"/>
-
-###  Sentinel Incident
-
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/8ffa89a6dd404ae62881b2ff9b7f0bfb96718a4a/Playbooks/SecCopilot-UserReportedPhishing/images/sentinel%20incident.jpg"/>
+<img src="./images/full_view.png"/>
