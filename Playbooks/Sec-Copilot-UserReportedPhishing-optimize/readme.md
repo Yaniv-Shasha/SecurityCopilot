@@ -20,7 +20,7 @@ Additionally, if the phishing probability exceeds 75%, a Sentinel Incident will 
 • The user authenticated in the Copilot logic app action should have Security Admin permissions and the role of a Microsoft Sentinel contributor, as this is necessary for creating incident comments.<br>
 • Upload and enable custom KQL plugin, this need to be on the same user profile that running automation. <br>
 
-<img src="./images/dupload01.png"/>
+<img src="./images/upload01.png"/>
 
 <img src="./images/enable_skill.png"/>
 
