@@ -33,9 +33,7 @@ Additionally, if the phishing probability exceeds 75%, a Sentinel Incident will 
 
 <br>
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/Sentinel_auth.jpg"/>
 
-<br>
 
 
 
