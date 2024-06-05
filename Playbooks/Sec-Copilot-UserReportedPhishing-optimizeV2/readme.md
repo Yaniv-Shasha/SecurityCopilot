@@ -20,18 +20,22 @@ Additionally, if the phishing probability exceeds 75%, a Sentinel Incident will 
 • The user authenticated in the Copilot logic app action should have Security Admin permissions and the role of a Microsoft Sentinel contributor, as this is necessary for creating incident comments.<br>
 • Upload and enable custom KQL plugin, this need to be on the same user profile that running automation. <br>
 
-<img src="./images/upload01.png"/>
+## Required Paramaters
 
-<img src="./images/enable_skill.png"/>
+- Playbook Name<br />
+An Azure AD App registration with required API permissions and secret will needed to provide the following parameters<br />
+https://docs.microsoft.com/microsoft-365/security/mtp/api-advanced-hunting?view=o365-worldwide<br />
 
- 
+- Tenant ID<br />
+- Client ID<br />
+- Secret<br />
+
+
 <br>
 
-<br>
+### Necessary configuration steps
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/copilot_auth.jpg"/>
-
-<br>
+Once this Playbooks template is deployed, you will need to go into the Logic App, edit it and click on each of the steps that require an authenticated connection to your tenant and complete the connection process.  These steps will have and exclamation point showing that the connection needs to be completed.  
 
 
 
