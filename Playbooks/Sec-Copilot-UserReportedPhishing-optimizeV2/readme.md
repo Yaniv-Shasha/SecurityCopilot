@@ -23,12 +23,12 @@ Additionally, if the phishing probability exceeds 75%, a Sentinel Incident will 
 ## Required Paramaters
 
 - Playbook Name<br />
-An Azure AD App registration with required API permissions and secret will needed to provide the following parameters<br />
+- An Azure AD App registration with required API permissions and secret will needed to provide the following parameters<br />
 https://docs.microsoft.com/microsoft-365/security/mtp/api-advanced-hunting?view=o365-worldwide<br />
 
-- Tenant ID<br />
-- Client ID<br />
-- Secret<br />
+    - Tenant ID<br />
+    - Client ID<br />
+    - Secret<br />
 
 
 <br>
