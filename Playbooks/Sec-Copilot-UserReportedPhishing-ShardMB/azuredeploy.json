@@ -1,0 +1,914 @@
+{
+    "$schema":  "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion":  "1.0.0.0",
+    "parameters":  {
+        "PlaybookName":  {
+            "defaultValue":  "Sec-Copilot-UserReportedPhishing-optimize-SharedMB",
+            "type":  "string"
+        },
+                "TenantID": {
+            "defaultValue": "<TenantID>",
+            "type": "string"
+        },
+        "ClientID": {
+            "defaultValue": "<M365 API ClientID>",
+            "type": "string"
+        },
+        "SharedMailboxAddress": {
+            "defaultValue": "<sharedMailbox@contoso.com>",
+            "type": "string"
+        },
+        "Secret": {
+            "defaultValue": "<M365 API Secret>",
+            "type": "string"
+        }
+    },
+    "variables":  {
+        "ConversionserviceConnectionName":  "[concat('Conversionservice-', parameters('PlaybookName'))]",
+        "Office365ConnectionName":  "[concat('Office365-', parameters('PlaybookName'))]",
+        "SecuritycopilotConnectionName":  "[concat('Securitycopilot-', parameters('PlaybookName'))]"
+    },
+    "resources":  [
+        {
+            "properties":  {
+                "provisioningState":  "Succeeded",
+                "state":  "Enabled",
+                "definition":  {
+                    "$schema":  "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion":  "1.0.0.0",
+                    "parameters":  {
+                        "$connections":  {
+                            "defaultValue":  {
+                            },
+                            "type":  "Object"
+                        }
+                    },
+                    "triggers":  {
+                        "When_a_new_email_arrives_in_a_shared_mailbox_(V2)":  {
+                            "recurrence":  {
+                                "frequency":  "Minute",
+                                "interval":  3
+                            },
+                            "evaluatedRecurrence":  {
+                                "frequency":  "Minute",
+                                "interval":  3
+                            },
+                            "splitOn":  "@triggerBody()?['value']",
+                            "type":  "ApiConnection",
+                            "inputs":  {
+                                "host":  {
+                                    "connection":  {
+                                        "name":  "@parameters('$connections')['office365_2']['connectionId']"
+                                    }
+                                },
+                                "method":  "get",
+                                "path":  "/v2/SharedMailbox/Mail/OnNewEmail",
+                                "queries":  {
+                                    "folderId":  "Inbox",
+                                    "hasAttachments":  false,
+                                    "importance":  "Any",
+                                    "includeAttachments":  true,
+                                    "mailboxAddress":  "[parameters('SharedMailboxAddress')]"
+                                }
+                            }
+                        }
+                    },
+                    "actions":  {
+                        "For_each":  {
+                            "foreach":  "@body('Parse_JSON_3')?['Results']",
+                            "actions":  {
+                                "Domain_reputation_MDTI":  {
+                                    "runAfter":  {
+                                        "Triage_this_email":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ApiConnection",
+                                    "inputs":  {
+                                        "body":  {
+                                            "PromptContent":  "Return the reputation for all the domains and IP addresses in this e-mail. besides https://security.microsoft.com/userSubmissionsReportMessage, include the sender domain (this should be the string that is coming after the @ sign)",
+                                            "SessionId":  "@body('Triage_this_email')?['sessionId']",
+                                            "SkillName":  "GetReputationsForIndicators"
+                                        },
+                                        "host":  {
+                                            "connection":  {
+                                                "name":  "@parameters('$connections')['securitycopilot_1']['connectionId']"
+                                            }
+                                        },
+                                        "method":  "post",
+                                        "path":  "/process-prompt"
+                                    }
+                                },
+                                "HTTP_click_on_this_email":  {
+                                    "runAfter":  {
+                                        "who_got_this_email":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "Http",
+                                    "inputs":  {
+                                        "authentication":  {
+                                            "audience": "https://api.security.microsoft.com",
+                                            "clientId": "[parameters('ClientID')]",
+                                            "secret": "[parameters('Secret')]",
+                                            "tenant": "[parameters('TenantID')]",
+                                            "type": "ActiveDirectoryOAuth"
+                                        },
+                                        "body":  {
+                                            "Query":  "let email = EmailEvents | where Subject == '@{variables('OriginalSubject')}' and SenderFromAddress == '@{variables('OrignalFRomAddress')}' | project NetworkMessageId; let urls = EmailUrlInfo | join email on NetworkMessageId| project Url; UrlClickEvents| join urls on Url | summarize UsersWhoClicked = dcount(AccountUpn)"
+                                        },
+                                        "headers":  {
+                                            "Content-Type":  "application/json"
+                                        },
+                                        "method":  "POST",
+                                        "uri":  "https://api.security.microsoft.com/api/advancedHunting/run"
+                                    }
+                                },
+                                "Look_up_relevant_articles":  {
+                                    "runAfter":  {
+                                        "Domain_reputation_MDTI":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ApiConnection",
+                                    "inputs":  {
+                                        "body":  {
+                                            "PromptContent":  "Check if we have MDTI articles associated the above indicators. Only return articles relevant to indicators in the e-mail. You must not return articles that are not relevant.",
+                                            "SessionId":  "@body('Domain_reputation_MDTI')?['sessionId']",
+                                            "SkillName":  "GetArticlesIndicators"
+                                        },
+                                        "host":  {
+                                            "connection":  {
+                                                "name":  "@parameters('$connections')['securitycopilot_1']['connectionId']"
+                                            }
+                                        },
+                                        "method":  "post",
+                                        "path":  "/process-prompt"
+                                    }
+                                },
+                                "Parse_JSON_2":  {
+                                    "runAfter":  {
+                                        "prepare_respond_for_non-tech_user":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ParseJson",
+                                    "inputs":  {
+                                        "content":  "@body('prepare_respond_for_non-tech_user')",
+                                        "schema":  {
+                                            "properties":  {
+                                                "Evaluation Result Content":  {
+                                                    "type":  "string"
+                                                },
+                                                "Evaluation Result Type":  {
+                                                    "type":  "string"
+                                                },
+                                                "Next Prompt Suggestions":  {
+                                                },
+                                                "Prompt Content":  {
+                                                    "type":  "string"
+                                                },
+                                                "SessionId":  {
+                                                    "type":  "string"
+                                                },
+                                                "Skill Name":  {
+                                                }
+                                            },
+                                            "type":  "object"
+                                        }
+                                    }
+                                },
+                                "Send_an_email_(V2)":  {
+                                    "runAfter":  {
+                                        "Parse_JSON_2":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ApiConnection",
+                                    "inputs":  {
+                                        "body":  {
+                                            "Body":  "\u003cp\u003e@{body('Parse_JSON_2')?['Evaluation Result Content']}\u003c/p\u003e",
+                                            "Importance":  "Normal",
+                                            "Subject":  "Your Phishing submited email Report - Results",
+                                            "To": "@variables('OrignalTo')"
+                                        },
+                                        "host":  {
+                                            "connection":  {
+                                                "name":  "@parameters('$connections')['office365_2']['connectionId']"
+                                            }
+                                        },
+                                        "method":  "post",
+                                        "path":  "/v2/Mail"
+                                    }
+                                },
+                                "Summarize_findings":  {
+                                    "runAfter":  {
+                                        "who_click":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ApiConnection",
+                                    "inputs":  {
+                                        "body":  {
+                                            "PromptContent":  "Above was an investigation performed by a security analyst to determine if an e-mail was a phishing attempt. As part of the investigation, we check against microsoft defender advance hunting logs who else from our organization received this email  by running this query \n\nEmailEvents\n| where Subject == '@{variables('OriginalSubject')}'\n\nand we got the above results:\n@{body('who_got_this_email')?['Results']}\n\n\nThan we checked in advance hunting defender logs, who else click on this email \nBy running the above query \n            let email = EmailEvents\n            | where Subject == '@{variables('OriginalSubject')}' and SenderFromAddress == '@{variables('OrignalFRomAddress')}'\n            | project NetworkMessageId;\n            let urls = EmailUrlInfo\n            | join email on NetworkMessageId\n            | project Url;\n            UrlClickEvents\n            | join urls on Url\n            | summarize UsersWhoClicked = dcount(AccountUpn)\n\nAnd received  the above results :\n@{body('who_click')?['Results']}\n\nInclude the above results and Summarize this investigation with all the steps taken, share and decide if this is a phishing email. Share certainty percentage: if the email is not suspicious give it 0-30% if it medium suspicious give it 30%-74% and if its highly suspicious give it 75%-100%, you **must** include suspicious certainty percentage.\n\nformat the answer with bolt bpoints, like the baove example:\n\n\nhigh level overview on the mail indictors including the sender domain, receiver, send time, message id:\n\nSender Email Domain: @{variables('OrignalFRomAddress')}\ntoRecipients: @{variables('OrignalTo')}\nreceivedDateTime: @{variables('orignalRecivedTime')}\nid: @{items('For_each')?['InternetMessageId']}\n\nMDTI Findings:\nAdd the MDTI finding, including articles and TI indictors  if you find.\nArticles:\nArticle 1: Link to Article 1\nArticle 2: Link to Article 2\nThreat Intelligence Indicators:\nIP Addresses: \nURLs: \nFile Hashes: \n\nExplain about who else receive this email and who else click on it:\nRecipients and Click Activity:\nOther Recipients: \nClick Activity:\n\n\nSummary and Scoring:\n\nSummarize the percentage scoring   \nPhishing Email Score: 75%-100%\nRisk Level: \nRecommended Action: ",
+                                            "SessionId":  "@body('Look_up_relevant_articles')?['sessionId']",
+                                            "SkillName":  "SummarizeData"
+                                        },
+                                        "host":  {
+                                            "connection":  {
+                                                "name":  "@parameters('$connections')['securitycopilot_1']['connectionId']"
+                                            }
+                                        },
+                                        "method":  "post",
+                                        "path":  "/process-prompt"
+                                    }
+                                },
+                                "Triage_this_email":  {
+                                    "runAfter":  {
+                                    },
+                                    "type":  "ApiConnection",
+                                    "inputs":  {
+                                        "body":  {
+                                            "PromptContent":  "/AskGPT Triage the following email and point out what you find suspicious?when analyzing the email body Ignore this URL https://security.microsoft.com/userSubmissionsReportMessage. \nInvestigate the messageId above for any inconsistencies or signs of spoofing. \n\nUse inputs: email body:@{body('Html_to_text')} , \nsender email@{variables('OrignalFRomAddress')}, \nReciver email:@{variables('OrignalTo')}, \nMessage-ID:@{items('For_each')?['InternetMessageId']}, \nemailSubject:@{variables('OriginalSubject')},\nEmail receivedDateTime:@{variables('orignalRecivedTime')}, \nimportance:@{body('Parse_JSON')?['importance']}, \nSender IP address:@{items('For_each')?['SenderIPv4']}, \nAuthenticationDetalies:@{items('For_each')?['AuthenticationDetails']}, \n* This above email is a user submitted phishing (meaning the reciver user click report button, and the email move to a shared mailbox to process by this auotmation ).\n* During this process the orignal email came as attachment, base on this information  ignore the existence of the attachment during the analysis. \n* This email submited by the user, we will have discrepancy between the sender email vs the email from who recive from.ignire the mismatched Email Addresses.\nIn your answer use evidence from the email itsef in the analysis."
+                                        },
+                                        "host":  {
+                                            "connection":  {
+                                                "name":  "@parameters('$connections')['securitycopilot_1']['connectionId']"
+                                            }
+                                        },
+                                        "method":  "post",
+                                        "path":  "/process-prompt"
+                                    }
+                                },
+                                "prepare_respond_for_non-tech_user":  {
+                                    "runAfter":  {
+                                        "Summarize_findings":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ApiConnection",
+                                    "inputs":  {
+                                        "body":  {
+                                            "PromptContent":  "The above summarization finding is going to be send to the end user that reported about this email\nUse the same investigation content in this summarization but target it to end user that is not technical.\nPrepare your answer in an email form, with the recipient name is the audience of this email. format the output as HTML without any other token beside the html's tags",
+                                            "SessionId":  "@body('Summarize_findings')?['sessionId']"
+                                        },
+                                        "host":  {
+                                            "connection":  {
+                                                "name":  "@parameters('$connections')['securitycopilot_1']['connectionId']"
+                                            }
+                                        },
+                                        "method":  "post",
+                                        "path":  "/process-prompt"
+                                    }
+                                },
+                                "who_click":  {
+                                    "runAfter":  {
+                                        "HTTP_click_on_this_email":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ParseJson",
+                                    "inputs":  {
+                                        "content":  "@body('HTTP_click_on_this_email')",
+                                        "schema":  {
+                                            "properties":  {
+                                                "Results":  {
+                                                    "items":  {
+                                                        "properties":  {
+                                                            "UsersWhoClicked":  {
+                                                                "type":  "integer"
+                                                            }
+                                                        },
+                                                        "required":  [
+                                                            "UsersWhoClicked"
+                                                        ],
+                                                        "type":  "object"
+                                                    },
+                                                    "type":  "array"
+                                                },
+                                                "Schema":  {
+                                                    "items":  {
+                                                        "properties":  {
+                                                            "Name":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "Type":  {
+                                                                "type":  "string"
+                                                            }
+                                                        },
+                                                        "required":  [
+                                                            "Name",
+                                                            "Type"
+                                                        ],
+                                                        "type":  "object"
+                                                    },
+                                                    "type":  "array"
+                                                },
+                                                "Stats":  {
+                                                    "properties":  {
+                                                        "ExecutionTime":  {
+                                                            "type":  "number"
+                                                        },
+                                                        "dataset_statistics":  {
+                                                            "items":  {
+                                                                "properties":  {
+                                                                    "table_row_count":  {
+                                                                        "type":  "integer"
+                                                                    },
+                                                                    "table_size":  {
+                                                                        "type":  "integer"
+                                                                    }
+                                                                },
+                                                                "required":  [
+                                                                    "table_row_count",
+                                                                    "table_size"
+                                                                ],
+                                                                "type":  "object"
+                                                            },
+                                                            "type":  "array"
+                                                        },
+                                                        "resource_usage":  {
+                                                            "properties":  {
+                                                                "cache":  {
+                                                                    "properties":  {
+                                                                        "disk":  {
+                                                                        },
+                                                                        "memory":  {
+                                                                        }
+                                                                    },
+                                                                    "type":  "object"
+                                                                },
+                                                                "cpu":  {
+                                                                    "properties":  {
+                                                                        "kernel":  {
+                                                                            "type":  "string"
+                                                                        },
+                                                                        "total cpu":  {
+                                                                            "type":  "string"
+                                                                        },
+                                                                        "user":  {
+                                                                            "type":  "string"
+                                                                        }
+                                                                    },
+                                                                    "type":  "object"
+                                                                },
+                                                                "memory":  {
+                                                                    "properties":  {
+                                                                        "peak_per_node":  {
+                                                                            "type":  "integer"
+                                                                        }
+                                                                    },
+                                                                    "type":  "object"
+                                                                }
+                                                            },
+                                                            "type":  "object"
+                                                        }
+                                                    },
+                                                    "type":  "object"
+                                                }
+                                            },
+                                            "type":  "object"
+                                        }
+                                    }
+                                },
+                                "who_got_this_email":  {
+                                    "runAfter":  {
+                                        "who_other_send_this_email":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "ParseJson",
+                                    "inputs":  {
+                                        "content":  "@body('who_other_send_this_email')",
+                                        "schema":  {
+                                            "properties":  {
+                                                "Results":  {
+                                                    "items":  {
+                                                        "properties":  {
+                                                            "RecipientEmailAddress":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "SenderDisplayName":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "SenderFromAddress":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "SenderIPv4":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "TimeGenerated":  {
+                                                                "type":  "string"
+                                                            }
+                                                        },
+                                                        "required":  [
+                                                            "SenderDisplayName",
+                                                            "SenderFromAddress",
+                                                            "RecipientEmailAddress",
+                                                            "SenderIPv4",
+                                                            "TimeGenerated"
+                                                        ],
+                                                        "type":  "object"
+                                                    },
+                                                    "type":  "array"
+                                                },
+                                                "Schema":  {
+                                                    "items":  {
+                                                        "properties":  {
+                                                            "Name":  {
+                                                                "type":  "string"
+                                                            },
+                                                            "Type":  {
+                                                                "type":  "string"
+                                                            }
+                                                        },
+                                                        "required":  [
+                                                            "Name",
+                                                            "Type"
+                                                        ],
+                                                        "type":  "object"
+                                                    },
+                                                    "type":  "array"
+                                                },
+                                                "Stats":  {
+                                                    "properties":  {
+                                                        "ExecutionTime":  {
+                                                            "type":  "number"
+                                                        },
+                                                        "dataset_statistics":  {
+                                                            "items":  {
+                                                                "properties":  {
+                                                                    "table_row_count":  {
+                                                                        "type":  "integer"
+                                                                    },
+                                                                    "table_size":  {
+                                                                        "type":  "integer"
+                                                                    }
+                                                                },
+                                                                "required":  [
+                                                                    "table_row_count",
+                                                                    "table_size"
+                                                                ],
+                                                                "type":  "object"
+                                                            },
+                                                            "type":  "array"
+                                                        },
+                                                        "resource_usage":  {
+                                                            "properties":  {
+                                                                "cache":  {
+                                                                    "properties":  {
+                                                                        "disk":  {
+                                                                        },
+                                                                        "memory":  {
+                                                                        }
+                                                                    },
+                                                                    "type":  "object"
+                                                                },
+                                                                "cpu":  {
+                                                                    "properties":  {
+                                                                        "kernel":  {
+                                                                            "type":  "string"
+                                                                        },
+                                                                        "total cpu":  {
+                                                                            "type":  "string"
+                                                                        },
+                                                                        "user":  {
+                                                                            "type":  "string"
+                                                                        }
+                                                                    },
+                                                                    "type":  "object"
+                                                                },
+                                                                "memory":  {
+                                                                    "properties":  {
+                                                                        "peak_per_node":  {
+                                                                            "type":  "integer"
+                                                                        }
+                                                                    },
+                                                                    "type":  "object"
+                                                                }
+                                                            },
+                                                            "type":  "object"
+                                                        }
+                                                    },
+                                                    "type":  "object"
+                                                }
+                                            },
+                                            "type":  "object"
+                                        }
+                                    }
+                                },
+                                "who_other_send_this_email":  {
+                                    "runAfter":  {
+                                        "Look_up_relevant_articles":  [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type":  "Http",
+                                    "inputs":  {
+                                        "authentication":  {
+                                            "audience": "https://api.security.microsoft.com",
+                                            "clientId": "[parameters('ClientID')]",
+                                            "secret": "[parameters('Secret')]",
+                                            "tenant": "[parameters('TenantID')]",
+                                            "type": "ActiveDirectoryOAuth"
+                                        },
+                                        "body":  {
+                                            "Query":  "EmailEvents | where Subject == '@{variables('OrignalFRomAddress')}' | summarize by SenderDisplayName, SenderFromAddress,  RecipientEmailAddress, SenderIPv4 , TimeGenerated"
+                                        },
+                                        "headers":  {
+                                            "Content-Type":  "application/json"
+                                        },
+                                        "method":  "POST",
+                                        "uri":  "https://api.security.microsoft.com/api/advancedHunting/run"
+                                    }
+                                }
+                            },
+                            "runAfter":  {
+                                "Parse_JSON_3":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "Foreach"
+                        },
+                        "Get_Email_info":  {
+                            "runAfter":  {
+                                "OriginalSubject":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "Http",
+                            "inputs":  {
+                                "authentication":  {
+                                            "audience": "https://api.security.microsoft.com",
+                                            "clientId": "[parameters('ClientID')]",
+                                            "secret": "[parameters('Secret')]",
+                                            "tenant": "[parameters('TenantID')]",
+                                            "type": "ActiveDirectoryOAuth"
+                                },
+                                "body":  {
+                                    "Query":  "EmailEvents | where Subject == '@{variables('OriginalSubject')}' | where SenderFromAddress == '@{variables('OrignalFRomAddress')}' | project SenderIPv4, InternetMessageId, AuthenticationDetails, Timestamp"
+                                },
+                                "headers":  {
+                                    "Content-Type":  "application/json"
+                                },
+                                "method":  "POST",
+                                "uri":  "https://api.security.microsoft.com/api/advancedHunting/run"
+                            }
+                        },
+                        "Html_to_text":  {
+                            "runAfter":  {
+                                "Parse_JSON":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ApiConnection",
+                            "inputs":  {
+                                "body":  "\u003cp\u003e@{body('Parse_JSON')}\u003c/p\u003e",
+                                "host":  {
+                                    "connection":  {
+                                        "name":  "@parameters('$connections')['conversionservice']['connectionId']"
+                                    }
+                                },
+                                "method":  "post",
+                                "path":  "/html2text"
+                            }
+                        },
+                        "OriginalSubject":  {
+                            "runAfter":  {
+                                "orignalRecovedTime":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "InitializeVariable",
+                            "inputs":  {
+                                "variables":  [
+                                    {
+                                        "name":  "OriginalSubject",
+                                        "type":  "string",
+                                        "value":  "@{slice(first(split(last(split(body('Parse_JSON')?['subject'], '|')),')')), 1)}"
+                                    }
+                                ]
+                            }
+                        },
+                        "OrignalFrom":  {
+                            "runAfter":  {
+                                "Html_to_text":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "InitializeVariable",
+                            "inputs":  {
+                                "variables":  [
+                                    {
+                                        "name":  "OrignalFRomAddress",
+                                        "type":  "string",
+                                        "value":  "@{last(take(split(body('Parse_JSON')?['subject'], '|'),3))}"
+                                    }
+                                ]
+                            }
+                        },
+                        "OrignalTo":  {
+                            "runAfter":  {
+                                "OrignalFrom":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "InitializeVariable",
+                            "inputs":  {
+                                "variables":  [
+                                    {
+                                        "name":  "OrignalTo",
+                                        "type":  "string",
+                                        "value":  "@triggerBody()?['from']"
+                                    }
+                                ]
+                            }
+                        },
+                        "Parse_JSON":  {
+                            "runAfter":  {
+                            },
+                            "type":  "ParseJson",
+                            "inputs":  {
+                                "content":  "@triggerBody()",
+                                "schema":  {
+                                    "properties":  {
+                                        "attachments":  {
+                                            "type":  "array"
+                                        },
+                                        "bccRecipients":  {
+                                        },
+                                        "body":  {
+                                            "type":  "string"
+                                        },
+                                        "bodyPreview":  {
+                                            "type":  "string"
+                                        },
+                                        "ccRecipients":  {
+                                        },
+                                        "conversationId":  {
+                                            "type":  "string"
+                                        },
+                                        "from":  {
+                                            "type":  "string"
+                                        },
+                                        "hasAttachments":  {
+                                            "type":  "boolean"
+                                        },
+                                        "id":  {
+                                            "type":  "string"
+                                        },
+                                        "importance":  {
+                                            "type":  "string"
+                                        },
+                                        "internetMessageId":  {
+                                            "type":  "string"
+                                        },
+                                        "isHtml":  {
+                                            "type":  "boolean"
+                                        },
+                                        "isRead":  {
+                                            "type":  "boolean"
+                                        },
+                                        "receivedDateTime":  {
+                                            "type":  "string"
+                                        },
+                                        "replyTo":  {
+                                        },
+                                        "subject":  {
+                                            "type":  "string"
+                                        },
+                                        "toRecipients":  {
+                                            "type":  "string"
+                                        }
+                                    },
+                                    "type":  "object"
+                                }
+                            }
+                        },
+                        "Parse_JSON_3":  {
+                            "runAfter":  {
+                                "Get_Email_info":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "ParseJson",
+                            "inputs":  {
+                                "content":  "@body('Get_Email_info')",
+                                "schema":  {
+                                    "properties":  {
+                                        "Results":  {
+                                            "items":  {
+                                                "properties":  {
+                                                    "AuthenticationDetails":  {
+                                                        "type":  "string"
+                                                    },
+                                                    "InternetMessageId":  {
+                                                        "type":  "string"
+                                                    },
+                                                    "SenderIPv4":  {
+                                                        "type":  "string"
+                                                    },
+                                                    "Timestamp":  {
+                                                        "type":  "string"
+                                                    }
+                                                },
+                                                "required":  [
+                                                    "SenderIPv4",
+                                                    "InternetMessageId",
+                                                    "AuthenticationDetails",
+                                                    "Timestamp"
+                                                ],
+                                                "type":  "object"
+                                            },
+                                            "type":  "array"
+                                        },
+                                        "Schema":  {
+                                            "items":  {
+                                                "properties":  {
+                                                    "Name":  {
+                                                        "type":  "string"
+                                                    },
+                                                    "Type":  {
+                                                        "type":  "string"
+                                                    }
+                                                },
+                                                "required":  [
+                                                    "Name",
+                                                    "Type"
+                                                ],
+                                                "type":  "object"
+                                            },
+                                            "type":  "array"
+                                        },
+                                        "Stats":  {
+                                            "properties":  {
+                                                "ExecutionTime":  {
+                                                    "type":  "number"
+                                                },
+                                                "dataset_statistics":  {
+                                                    "items":  {
+                                                        "properties":  {
+                                                            "table_row_count":  {
+                                                                "type":  "integer"
+                                                            },
+                                                            "table_size":  {
+                                                                "type":  "integer"
+                                                            }
+                                                        },
+                                                        "required":  [
+                                                            "table_row_count",
+                                                            "table_size"
+                                                        ],
+                                                        "type":  "object"
+                                                    },
+                                                    "type":  "array"
+                                                },
+                                                "resource_usage":  {
+                                                    "properties":  {
+                                                        "cache":  {
+                                                            "properties":  {
+                                                                "disk":  {
+                                                                },
+                                                                "memory":  {
+                                                                }
+                                                            },
+                                                            "type":  "object"
+                                                        },
+                                                        "cpu":  {
+                                                            "properties":  {
+                                                                "kernel":  {
+                                                                    "type":  "string"
+                                                                },
+                                                                "total cpu":  {
+                                                                    "type":  "string"
+                                                                },
+                                                                "user":  {
+                                                                    "type":  "string"
+                                                                }
+                                                            },
+                                                            "type":  "object"
+                                                        },
+                                                        "memory":  {
+                                                            "properties":  {
+                                                                "peak_per_node":  {
+                                                                    "type":  "integer"
+                                                                }
+                                                            },
+                                                            "type":  "object"
+                                                        }
+                                                    },
+                                                    "type":  "object"
+                                                }
+                                            },
+                                            "type":  "object"
+                                        }
+                                    },
+                                    "type":  "object"
+                                }
+                            }
+                        },
+                        "orignalRecovedTime":  {
+                            "runAfter":  {
+                                "OrignalTo":  [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type":  "InitializeVariable",
+                            "inputs":  {
+                                "variables":  [
+                                    {
+                                        "name":  "orignalRecivedTime",
+                                        "type":  "string",
+                                        "value":  "@{take(reverse(split(last(take(split(body('Parse_JSON')?['subject'], '|'),5)),' ')),2)}"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "outputs":  {
+                    }
+                },
+                "parameters":  {
+                    "$connections":  {
+                        "value":  {
+                            "conversionservice":  {
+                                "connectionId":  "[resourceId('Microsoft.Web/connections', variables('ConversionserviceConnectionName'))]",
+                                "connectionName":  "[variables('ConversionserviceConnectionName')]",
+                                "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Conversionservice')]"
+                            },
+                            "office365_2":  {
+                                "connectionId":  "[resourceId('Microsoft.Web/connections', variables('Office365ConnectionName'))]",
+                                "connectionName":  "[variables('Office365ConnectionName')]",
+                                "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Office365')]"
+                            },
+                            "securitycopilot_1":  {
+                                "connectionId":  "[resourceId('Microsoft.Web/connections', variables('SecuritycopilotConnectionName'))]",
+                                "connectionName":  "[variables('SecuritycopilotConnectionName')]",
+                                "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Securitycopilot')]"
+                            }
+                        }
+                    }
+                }
+            },
+            "name":  "[parameters('PlaybookName')]",
+            "type":  "Microsoft.Logic/workflows",
+            "location":  "[resourceGroup().location]",
+            "tags":  {
+                "Created By":  "Abbas Bengtsson",
+                "CreatedDate":  "5/17/2024 4:19:09 PM",
+                "CreatorUPN":  ""
+            },
+            "apiVersion":  "2017-07-01",
+            "dependsOn":  [
+                "[resourceId('Microsoft.Web/connections', variables('ConversionserviceConnectionName'))]",
+                "[resourceId('Microsoft.Web/connections', variables('Office365ConnectionName'))]",
+                "[resourceId('Microsoft.Web/connections', variables('SecuritycopilotConnectionName'))]"
+            ]
+        },
+        {
+            "type":  "Microsoft.Web/connections",
+            "apiVersion":  "2016-06-01",
+            "name":  "[variables('ConversionserviceConnectionName')]",
+            "location":  "[resourceGroup().location]",
+            "kind":  "V1",
+            "properties":  {
+                "displayName":  "[variables('ConversionserviceConnectionName')]",
+                "customParameterValues":  {
+                },
+                "api":  {
+                    "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Conversionservice')]"
+                }
+            }
+        },
+        {
+            "type":  "Microsoft.Web/connections",
+            "apiVersion":  "2016-06-01",
+            "name":  "[variables('Office365ConnectionName')]",
+            "location":  "[resourceGroup().location]",
+            "kind":  "V1",
+            "properties":  {
+                "displayName":  "[variables('Office365ConnectionName')]",
+                "customParameterValues":  {
+                },
+                "api":  {
+                    "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Office365')]"
+                }
+            }
+        },
+        {
+            "type":  "Microsoft.Web/connections",
+            "apiVersion":  "2016-06-01",
+            "name":  "[variables('SecuritycopilotConnectionName')]",
+            "location":  "[resourceGroup().location]",
+            "kind":  "V1",
+            "properties":  {
+                "displayName":  "[variables('SecuritycopilotConnectionName')]",
+                "customParameterValues":  {
+                },
+                "api":  {
+                    "id":  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/Securitycopilot')]"
+                }
+            }
+        }
+    ]
+}
