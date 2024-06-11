@@ -37,6 +37,20 @@ Additionally, if the phishing probability exceeds 75%, a Sentinel Incident will 
 To deploy the above logic app, you need to<br>
 •   Press on the Deploy option, select your subscription and the resource group (select the same tenant that Security Copilot is enabled)<br>
 
+## Required Paramaters
+
+- Playbook Name<br />
+- An Azure AD App registration with required API permissions and secret will needed to provide the following parameters<br />
+https://docs.microsoft.com/microsoft-365/security/mtp/api-advanced-hunting?view=o365-worldwide<br />
+
+    - Tenant ID<br />
+    - Client ID<br />
+    - Secret<br />
+    - Shared mail address (this is where the email trigger will connected)<br />
+
+<br>
+
+
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FPlaybooks%2FSec-Copilot-UserReportedPhishing-ShardMB%2Fazuredeploy.json" target="_blank">
     <img src="https://aka.ms/deploytoazurebutton"/>
 
