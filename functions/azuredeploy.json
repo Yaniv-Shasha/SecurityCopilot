@@ -152,7 +152,7 @@
                         "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', toLower(parameters('FunctionName')),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('FunctionName'))), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]",
                         "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "[concat('DefaultEndpointsProtocol=https;AccountName=', toLower(parameters('FunctionName')),';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('FunctionName'))), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]",
                         "WEBSITE_CONTENTSHARE": "[toLower(parameters('FunctionName'))]",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/functions/parseemnail.zip?raw=true"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/Yaniv-Shasha/SecurityCopilot/blob/main/functions/parseemail.zip?raw=true"
                     } 
                 }
             ]
