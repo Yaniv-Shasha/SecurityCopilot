@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "PlaybookName": {
-            "defaultValue": "UserReportedPhishForwardedEmails",
+            "defaultValue": "clone-fwd",
             "type": "string"
         }
     },
@@ -18,6 +18,7 @@
                 "state": "Enabled",
                 "definition": {
                     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
                     "parameters": {
                         "$connections": {
                         "defaultValue": {},
@@ -29,41 +30,63 @@
                         "splitOn": "@triggerBody()?['value']",
                         "type": "ApiConnectionNotification",
                         "inputs": {
-                            "host": {
-                                "connection": {
-                                    "name": "@parameters('$connections')['office365']['connectionId']"
-                                }
-                            },
                             "fetch": {
+                                "method": "get",
                                 "pathTemplate": {
                                     "template": "/v3/Mail/OnNewEmail"
                                 },
-                                "method": "get",
                                 "queries": {
-                                    "importance": "Any",
                                     "fetchOnlyWithAttachment": false,
-                                    "includeAttachments": true,
-                                    "folderPath": "Inbox"
+                                    "folderPath": "Inbox",
+                                    "importance": "Any",
+                                    "includeAttachments": true
+                                }
+                            },
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['office365']['connectionId']"
                                 }
                             },
                             "subscribe": {
                                 "body": {
                                     "NotificationUrl": "@{listCallbackUrl()}"
                                 },
+                                "method": "post",
                                 "pathTemplate": {
                                     "template": "/GraphMailSubscriptionPoke/$subscriptions"
                                 },
-                                "method": "post",
                                 "queries": {
-                                    "importance": "Any",
                                     "fetchOnlyWithAttachment": false,
-                                    "folderPath": "Inbox"
+                                    "folderPath": "Inbox",
+                                    "importance": "Any"
                                 }
                             }
                         }
                     }
                 },
                 "actions": {
+                    "AnalyzeSecurityData_Email_intent": {
+                        "runAfter": {
+                            "Check_if_domains_exist": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "body": {
+                                "PromptContent": "{\n  \"input\": \"@{body('ParseJSON')}\",\n  \"question\": \"Analyze the intent of the email body for malicious intent. I'm specifically interested in a sense of urgency, generic greetings, spelling or grammar mistakes, requests for personal information, 'too good to be true', emotional manipulation, and otherwise unusual requests in the body parameter. Urging the user to click on a link or call a phone number when any of the above conditions are met indicates malicious intent. Random words that do not make sense throughout is a technique used to bypass email filters, signaling malicious intent. Note in the output if the email has been forwarded, the content should include the email body of all emails that may have been forwarded.\"\n}",
+                                "SessionId": "@body('InitialPrompt')?['sessionId']",
+                                "SkillName": "AnalyzeSecurityData"
+                            },
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['securitycopilot']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/process-prompt"
+                        }
+                    },
                     "AskGPT_finalize_and_score": {
                         "runAfter": {
                             "AnalyzeSecurityData_Email_intent": [
@@ -72,46 +95,44 @@
                         },
                         "type": "ApiConnection",
                         "inputs": {
+                            "body": {
+                                "PromptContent": "/AskGpt Summarize our phishing email investigation with all the data from the previous steps taken. Decide if the phishing email assessed is a true positive, or a false positive. Provide a confidence score from 0-100 where 0 is a false positive and not likely a phishing email, and 100 is a true positive and definitely a phishing email. You must provide a confidence score and evidence for your decision.",
+                                "SessionId": "@body('InitialPrompt')?['SessionId']"
+                            },
                             "host": {
                                 "connection": {
                                     "name": "@parameters('$connections')['securitycopilot']['connectionId']"
                                 }
                             },
                             "method": "post",
-                            "body": {
-                                "PromptContent": "/AskGpt Summarize our phishing email investigation with all the data from the previous steps taken. Decide if the phishing email assessed is a true positive, or a false positive. Provide a confidence score from 0-100 where 0 is a false positive and not likely a phishing email, and 100 is a true positive and definitely a phishing email. You must provide a confidence score and evidence for your decision.",
-                                "SessionId": "@body('InitialPrompt')?['SessionId']"
-                            },
                             "path": "/process-prompt"
                         }
                     },
                     "Check_if_IPs_exist": {
                         "actions": {
                             "GetReputationsForIndicators_ipaddresses": {
-                                "type": "ApiConnection",
-                                "inputs": {
-                                    "host": {
-                                        "connection": {
-                                            "name": "@parameters('$connections')['securitycopilot']['connectionId']"
-                                        }
-                                    },
-                                    "method": "post",
-                                    "body": {
-                                        "PromptContent": "{\"indicators\":\"Check the reputation for these IP addresses @{variables('ip_addresses')}\"}",
-                                        "SessionId": "@body('InitialPrompt')?['sessionId']",
-                                        "SkillName": "GetReputationsForIndicators"
-                                    },
-                                    "path": "/process-prompt"
-                                }
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "PromptContent": "{\"indicators\":\"Check the reputation for these IP addresses @{variables('ip_addresses')}\"}",
+                                    "SessionId": "@body('InitialPrompt')?['sessionId']",
+                                    "SkillName": "GetReputationsForIndicators"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['securitycopilot']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/process-prompt"
                             }
-                        },
-                        "runAfter": {
-                            "Check_if_attachments_exist": [
-                                "Succeeded"
-                            ]
-                        },
-                        "else": {
-                        "actions": {}
+                        }
+                    },
+                    "runAfter": {
+                        "Check_if_attachments_exist": [
+                            "Succeeded"
+                        ]
                     },
                     "expression": {
                         "and": [
@@ -128,30 +149,28 @@
                 "Check_if_URLs_exist": {
                     "actions": {
                         "GetReputationsForIndicators_urls": {
-                            "type": "ApiConnection",
-                            "inputs": {
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['securitycopilot']['connectionId']"
-                                    }
-                                },
-                                "method": "post",
-                                "body": {
-                                    "PromptContent": "{\"indicators\": \"Check the reputation for these urls @{variables('urls')}\"}",
-                                    "SessionId": "@body('InitialPrompt')?['sessionId']",
-                                    "SkillName": "GetReputationsForIndicators"
-                                },
-                                "path": "/process-prompt"
-                            }
+                        "runAfter": {},
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "body": {
+                                "PromptContent": "{\"indicators\": \"Check the reputation for these urls @{variables('urls')}\"}",
+                                "SessionId": "@body('InitialPrompt')?['sessionId']",
+                                "SkillName": "GetReputationsForIndicators"
+                            },
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['securitycopilot']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/process-prompt"
                         }
-                    },
-                    "runAfter": {
-                        "Check_if_IPs_exist": [
-                            "Succeeded"
-                        ]
-                    },
-                    "else": {
-                    "actions": {}
+                    }
+                },
+                "runAfter": {
+                    "Check_if_IPs_exist": [
+                        "Succeeded"
+                    ]
                 },
                 "expression": {
                     "and": [
@@ -168,30 +187,28 @@
             "Check_if_attachments_exist": {
                 "actions": {
                     "Check_Attachment_Hash_GetFileAnalysis": {
-                        "type": "ApiConnection",
-                        "inputs": {
-                            "host": {
-                                "connection": {
-                                    "name": "@parameters('$connections')['securitycopilot']['connectionId']"
-                                }
-                            },
-                            "method": "post",
-                            "body": {
-                                "PromptContent": "{\"hash\":  @{body('ParseJSON')['email_content'][0]['attachments'][0]['attachment_sha256']}}",
-                                "SessionId": "@body('InitialPrompt')?['sessionId']",
-                                "SkillName": "GetFileAnalysis"
-                            },
-                            "path": "/process-prompt"
-                        }
+                    "runAfter": {},
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "body": {
+                            "PromptContent": "{\"hash\":  @{body('ParseJSON')['email_content'][0]['attachments'][0]['attachment_sha256']}}",
+                            "SessionId": "@body('InitialPrompt')?['sessionId']",
+                            "SkillName": "GetFileAnalysis"
+                        },
+                        "host": {
+                            "connection": {
+                                "name": "@parameters('$connections')['securitycopilot']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "path": "/process-prompt"
                     }
-                },
-                "runAfter": {
-                    "InitialPrompt": [
-                        "Succeeded"
-                    ]
-                },
-                "else": {
-                "actions": {}
+                }
+            },
+            "runAfter": {
+                "InitialPrompt": [
+                    "Succeeded"
+                ]
             },
             "expression": {
                 "and": [
@@ -205,294 +222,23 @@
             },
             "type": "If"
         },
-        "Compose": {
-            "runAfter": {
-                "ParseRawEmailFwd-parse_fwd_email": [
-                    "Succeeded"
-                ]
-            },
-            "type": "Compose",
-            "inputs": "@body('ParseRawEmailFwd-parse_fwd_email')"
-        },
-        "Export_email_(V2)": {
-        "runAfter": {},
-        "type": "ApiConnection",
-        "inputs": {
-            "host": {
-                "connection": {
-                    "name": "@parameters('$connections')['office365']['connectionId']"
-                }
-            },
-            "method": "get",
-            "path": "/codeless/beta/me/messages/@{encodeURIComponent(triggerBody()?['id'])}/$value"
-        }
-    },
-    "InitialPrompt": {
-        "runAfter": {
-            "InitializeDomainsVar": [
-                "Succeeded"
-            ]
-        },
-        "type": "ApiConnection",
-        "inputs": {
-            "host": {
-                "connection": {
-                    "name": "@parameters('$connections')['securitycopilot']['connectionId']"
-                }
-            },
-            "method": "post",
-            "body": {
-                "PromptContent": "/AskGpt This is an email investigation to determine if the email is malicious in nature. Acknowledge this prompt with \"OK, awaiting your input.\"",
-                "Skillsets": [
-                    "Generic",
-                    "VirusTotalAPISearch",
-                    "M365",
-                    "ThreatIntelligence.DTI"
-                ]
-            },
-            "path": "/process-prompt"
-        }
-    },
-    "InitializeAttachmentsVar": {
-        "runAfter": {
-            "InitializeURLVar": [
-                "Succeeded"
-            ]
-        },
-        "type": "InitializeVariable",
-        "inputs": {
-            "variables": [
-                {
-                    "name": "attachments",
-                    "type": "array",
-                    "value": "@if(equals(empty(body('ParseJSON')['email_content'][0]['attachments']), false), body('ParseJSON')['email_content'][0]['attachments'], json('[]'))"
-                }
-            ]
-        }
-    },
-    "InitializeIPsVar": {
-        "runAfter": {
-            "ParseJSON": [
-                "Succeeded"
-            ]
-        },
-        "type": "InitializeVariable",
-        "inputs": {
-            "variables": [
-                {
-                    "name": "ip_addresses",
-                    "type": "array",
-                    "value": "@body('ParseJSON')['ip_addresses']"
-                }
-            ]
-        }
-    },
-    "InitializeURLVar": {
-        "runAfter": {
-            "InitializeIPsVar": [
-                "Succeeded"
-            ]
-        },
-        "type": "InitializeVariable",
-        "inputs": {
-            "variables": [
-                {
-                    "name": "urls",
-                    "type": "array",
-                    "value": "@body('ParseJSON')['urls']"
-                }
-            ]
-        }
-    },
-    "ParseJSON": {
-        "runAfter": {
-            "Compose": [
-                "Succeeded"
-            ]
-        },
-        "type": "ParseJson",
-        "inputs": {
-            "content": "@outputs('Compose')",
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "email_content": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "attachments": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "attachment_name": {
-                                                "type": "string"
-                                            },
-                                            "attachment_sha256": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "required": [
-                                            "attachment_name",
-                                            "attachment_sha256"
-                                        ]
-                                    }
-                                },
-                                "body": {
-                                    "type": "string"
-                                },
-                                "date": {
-                                    "type": "string"
-                                },
-                                "from": {
-                                    "type": "string"
-                                },
-                                "subject": {
-                                    "type": "string"
-                                },
-                                "to": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "from",
-                                "to",
-                                "date",
-                                "subject",
-                                "body",
-                                "attachments"
-                            ]
-                        }
-                    },
-                    "ip_addresses": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "urls": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "domains": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "required": [
-                    "email_content"
-                ]
-            }
-        }
-    },
-    "ParseRawEmailFwd-parse_fwd_email": {
-        "runAfter": {
-            "Export_email_(V2)": [
-                "Succeeded"
-            ]
-        },
-        "type": "Function",
-        "inputs": {
-            "body": "@body('Export_email_(V2)')",
-            "function": {
-                "id": "/subscriptions/ea2133ed-40f7-465c-ba33-07882efc8bd0/resourceGroups/craig-logic-app-rg/providers/Microsoft.Web/sites/ParseRawEmailFwd/functions/parse_fwd_email"
-            }
-        }
-    },
-    "Parse_JSON": {
-        "runAfter": {
-            "AskGPT_finalize_and_score": [
-                "Succeeded"
-            ]
-        },
-        "type": "ParseJson",
-        "inputs": {
-            "content": "@body('AskGPT_finalize_and_score')",
-            "schema": {
-                "properties": {
-                    "Evaluation Result Content": {
-                        "type": "string"
-                    },
-                    "Evaluation Result Type": {
-                        "type": "string"
-                    },
-                    "Prompt Content": {
-                        "type": "string"
-                    },
-                    "SessionId": {
-                        "type": "string"
-                    },
-                    "Skill Name": {
-                        "type": "string"
-                    },
-                    "Skill Sources": {
-                        "type": "array"
-                    }
-                },
-                "type": "object"
-            }
-        }
-    },
-    "AnalyzeSecurityData_Email_intent": {
-        "runAfter": {
-            "Check_if_domains_exist": [
-                "Succeeded"
-            ]
-        },
-        "type": "ApiConnection",
-        "inputs": {
-            "host": {
-                "connection": {
-                    "name": "@parameters('$connections')['securitycopilot']['connectionId']"
-                }
-            },
-            "method": "post",
-            "body": {
-                "PromptContent": "{\n  \"input\": \"@{body('ParseJSON')}\",\n  \"question\": \"Analyze the intent of the email body for malicious intent. I'm specifically interested in a sense of urgency, generic greetings, spelling or grammar mistakes, requests for personal information, 'too good to be true', emotional manipulation, and otherwise unusual requests in the body parameter. Urging the user to click on a link or call a phone number when any of the above conditions are met indicates malicious intent. Random words that do not make sense throughout is a technique used to bypass email filters, signaling malicious intent. Note in the output if the email has been forwarded, the content should include the email body of all emails that may have been forwarded.\"\n}",
-                "SessionId": "@body('InitialPrompt')?['sessionId']",
-                "SkillName": "AnalyzeSecurityData"
-            },
-            "path": "/process-prompt"
-        }
-    },
-    "InitializeDomainsVar": {
-        "runAfter": {
-            "InitializeAttachmentsVar": [
-                "Succeeded"
-            ]
-        },
-        "type": "InitializeVariable",
-        "inputs": {
-            "variables": [
-                {
-                    "name": "domains",
-                    "type": "array",
-                    "value": "@body('ParseJSON')?['domains']"
-                }
-            ]
-        }
-    },
-    "Check_if_domains_exist": {
-        "actions": {
-            "GetReputationsForIndicators_domains": {
+        "Check_if_domains_exist": {
+            "actions": {
+                "GetReputationsForIndicators_domains": {
+                "runAfter": {},
                 "type": "ApiConnection",
                 "inputs": {
+                    "body": {
+                        "PromptContent": "{\"indicators\": \"Check the reputation of these domains @{variables('domains')}\" }",
+                        "SessionId": "@{body('InitialPrompt')?['sessionId']}",
+                        "SkillName": "GetReputationsForIndicators"
+                    },
                     "host": {
                         "connection": {
                             "name": "@parameters('$connections')['securitycopilot']['connectionId']"
                         }
                     },
                     "method": "post",
-                    "body": {
-                        "PromptContent": "{\"indicators\": \"Check the reputation of these domains @{variables('domains')}\" }",
-                        "SessionId": "@{body('InitialPrompt')?['sessionId']}",
-                        "SkillName": "GetReputationsForIndicators"
-                    },
                     "path": "/process-prompt"
                 }
             }
@@ -502,20 +248,247 @@
                 "Succeeded"
             ]
         },
-        "else": {
-        "actions": {}
+        "expression": {
+            "and": [
+                {
+                    "greater": [
+                        "@length(variables('domains'))",
+                        0
+                    ]
+                }
+            ]
+        },
+        "type": "If"
     },
-    "expression": {
-        "and": [
-            {
-                "greater": [
-                    "@length(variables('domains'))",
-                    0
-                ]
+    "Compose": {
+        "runAfter": {
+            "Export_email_(V2)": [
+                "Succeeded"
+            ]
+        },
+        "type": "Compose",
+        "inputs": "@body('Export_email_(V2)')"
+    },
+    "Export_email_(V2)": {
+    "runAfter": {},
+    "type": "ApiConnection",
+    "inputs": {
+        "host": {
+            "connection": {
+                "name": "@parameters('$connections')['office365']['connectionId']"
             }
+        },
+        "method": "get",
+        "path": "/codeless/beta/me/messages/@{encodeURIComponent(triggerBody()?['id'])}/$value"
+    }
+},
+"InitialPrompt": {
+    "runAfter": {
+        "InitializeDomainsVar": [
+            "Succeeded"
         ]
     },
-    "type": "If"
+    "type": "ApiConnection",
+    "inputs": {
+        "body": {
+            "PromptContent": "/AskGpt This is an email investigation to determine if the email is malicious in nature. Acknowledge this prompt with \"OK, awaiting your input.\""
+        },
+        "host": {
+            "connection": {
+                "name": "@parameters('$connections')['securitycopilot']['connectionId']"
+            }
+        },
+        "method": "post",
+        "path": "/process-prompt"
+    }
+},
+"InitializeAttachmentsVar": {
+    "runAfter": {
+        "InitializeURLVar": [
+            "Succeeded"
+        ]
+    },
+    "type": "InitializeVariable",
+    "inputs": {
+        "variables": [
+            {
+                "name": "attachments",
+                "type": "array",
+                "value": "@if(equals(empty(body('ParseJSON')['email_content'][0]['attachments']), false), body('ParseJSON')['email_content'][0]['attachments'], json('[]'))"
+            }
+        ]
+    }
+},
+"InitializeDomainsVar": {
+    "runAfter": {
+        "InitializeAttachmentsVar": [
+            "Succeeded"
+        ]
+    },
+    "type": "InitializeVariable",
+    "inputs": {
+        "variables": [
+            {
+                "name": "domains",
+                "type": "array",
+                "value": "@body('ParseJSON')?['domains']"
+            }
+        ]
+    }
+},
+"InitializeIPsVar": {
+    "runAfter": {
+        "ParseJSON": [
+            "Succeeded"
+        ]
+    },
+    "type": "InitializeVariable",
+    "inputs": {
+        "variables": [
+            {
+                "name": "ip_addresses",
+                "type": "array",
+                "value": "@body('ParseJSON')['ip_addresses']"
+            }
+        ]
+    }
+},
+"InitializeURLVar": {
+    "runAfter": {
+        "InitializeIPsVar": [
+            "Succeeded"
+        ]
+    },
+    "type": "InitializeVariable",
+    "inputs": {
+        "variables": [
+            {
+                "name": "urls",
+                "type": "array",
+                "value": "@body('ParseJSON')['urls']"
+            }
+        ]
+    }
+},
+"ParseJSON": {
+    "runAfter": {
+        "Compose": [
+            "Succeeded"
+        ]
+    },
+    "type": "ParseJson",
+    "inputs": {
+        "content": "@outputs('Compose')",
+        "schema": {
+            "properties": {
+                "domains": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "email_content": {
+                    "items": {
+                        "properties": {
+                            "attachments": {
+                                "items": {
+                                    "properties": {
+                                        "attachment_name": {
+                                            "type": "string"
+                                        },
+                                        "attachment_sha256": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "attachment_name",
+                                        "attachment_sha256"
+                                    ],
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            },
+                            "body": {
+                                "type": "string"
+                            },
+                            "date": {
+                                "type": "string"
+                            },
+                            "from": {
+                                "type": "string"
+                            },
+                            "subject": {
+                                "type": "string"
+                            },
+                            "to": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "from",
+                            "to",
+                            "date",
+                            "subject",
+                            "body",
+                            "attachments"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "ip_addresses": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "urls": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "email_content"
+            ],
+            "type": "object"
+        }
+    }
+},
+"Parse_JSON": {
+    "runAfter": {
+        "AskGPT_finalize_and_score": [
+            "Succeeded"
+        ]
+    },
+    "type": "ParseJson",
+    "inputs": {
+        "content": "@body('AskGPT_finalize_and_score')",
+        "schema": {
+            "properties": {
+                "Evaluation Result Content": {
+                    "type": "string"
+                },
+                "Evaluation Result Type": {
+                    "type": "string"
+                },
+                "Prompt Content": {
+                    "type": "string"
+                },
+                "SessionId": {
+                    "type": "string"
+                },
+                "Skill Name": {
+                    "type": "string"
+                },
+                "Skill Sources": {
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        }
+    }
 }
 },
 "outputs": {}
