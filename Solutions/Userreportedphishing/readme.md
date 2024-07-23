@@ -19,22 +19,34 @@ The solution consists of two primary components: <br>
 
 
 ## Deployment of the Azure Function:
+
 The initial step to deploy the solution is setting up the Azure function.<br>
 Click the provided link to initiate the deployment, ensuring you alter only the target resource group parameter<br>
 
-
-
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FSolutions%2FUserreportedphishing%2Fazuredeploy.json" target="_blank">
+</a>
+<br>
 
 <p align="center">
-<img src="./images/deploy_func.jpg?raw=true""/>
+<img src="./images/deploy_func.jpg?raw=true"/>
 </p>
 <br>
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/Sentinel_auth.jpg"/>
+Once the deployment is complete, proceed to the resource group to retrieve and copy both the function name and the resource group details:<br>
+
+<p align="center">
+<img src="./images/azure_func_resource_selection.jpg?raw=true"/>
+</p>
+<br>
+## Deploying the Azure Logic app:
+
+To deploy the Azure logic app, click on the link provided above.
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FSolutions%2FUserreportedphishing%2Flogic_app%2Fazuredeploy.json" target="_blank">
 
 <br>
 
-• This logic app can be run in a manual way, or in automatic way, if you select the automated way, you will need to create a new automation rule in Sentinel and configure this logic app as an action.<br>
+
 
 
 <br>
@@ -44,7 +56,7 @@ Click the provided link to initiate the deployment, ensuring you alter only the 
 To deploy the above logic app, you need to<br>
 •   Press on the Deploy option, select your subscription and the resource group (select the same tenant that Security Copilot is enabled)<br>
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FPlaybooks%2FCopilot-Sentinel_investigation-DynamicSev%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FSolutions%2FUserreportedphishing%2Fazuredeploy.json" target="_blank">
     <img src="https://aka.ms/deploytoazurebutton"/>
 </a>
 <br>
