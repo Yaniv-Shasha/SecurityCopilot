@@ -24,7 +24,9 @@ The initial step to deploy the solution is setting up the Azure function.<br>
 Click the provided link to initiate the deployment, ensuring you alter only the target resource group parameter<br>
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FSolutions%2FUserreportedphishing%2Fazuredeploy.json" target="_blank">
+<img src="https://aka.ms/deploytoazurebutton"/>
 </a>
+
 <br>
 
 <p align="center">
@@ -32,15 +34,16 @@ Click the provided link to initiate the deployment, ensuring you alter only the 
 </p>
 <br>
 
-Once the deployment is complete, proceed to the resource group to retrieve and copy both the function name and the resource group details:<br>
+• Once the deployment is complete, proceed to the resource group to retrieve and copy both the function name and the resource group details:<br>
 
 <p align="center">
 <img src="./images/azure_func_resource_selection.jpg?raw=true"/>
 </p>
 <br>
+
 ## Deploying the Azure Logic app:
 
-To deploy the Azure logic app, click on the link provided above.
+• To deploy the Azure logic app, click on the link provided above.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FSolutions%2FUserreportedphishing%2Flogic_app%2Fazuredeploy.json" target="_blank">
 
