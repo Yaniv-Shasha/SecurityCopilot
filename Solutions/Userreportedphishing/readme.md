@@ -1,5 +1,5 @@
 # User reported phishing Copilot for Security automatic investigation
-Author: Craig Freyman & Yaniv Shasha<br>
+Author: **Craig Freyman & Yaniv Shasha**<br>
 
 
 The given automation activates when an email arrives in a shared mailbox. Our approach to handling incoming emails includes:<br>
