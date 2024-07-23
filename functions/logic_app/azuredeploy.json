@@ -13,10 +13,10 @@
             "type":  "string"
         },
         "FunctionName01":  {            
-            "type":  "string"
+            "type":  "parseemail"
         },
         "FunctionName02":  {            
-            "type":  "string"
+            "type":  "parse_smtp_headers"
         }
     },
     "variables": {
