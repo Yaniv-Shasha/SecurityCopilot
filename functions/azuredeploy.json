@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "FunctionName": {
-            "defaultValue": "CopilotForSecurity-Phishing-investigation",
+            "defaultValue": "CopilotForSecurityPhishinginvestigation",
             "type": "string"
         }
     },
@@ -79,7 +79,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('StorageAccountName'), '/default')]",
+            "name": "[concat(variables('StorageAccountName'), '/default')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
             ],
@@ -100,7 +100,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts/fileServices",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('StorageAccountName'), '/default')]",
+            "name": "[concat(variables('StorageAccountName'), '/default')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts',  variables('StorageAccountName'))]"
             ],
