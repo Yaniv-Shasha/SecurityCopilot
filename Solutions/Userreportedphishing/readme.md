@@ -25,8 +25,9 @@ Click the provided link to initiate the deployment, ensuring you alter only the 
 
 
 
-<img src="./images/deploy_func.jpg"/>
-
+<p align="center">
+<img src="./images/deploy_func.jpg?raw=true""/>
+</p>
 <br>
 
 <img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/00853308e8949cc7279640aa9743759f586bb190/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/Sentinel_auth.jpg"/>
