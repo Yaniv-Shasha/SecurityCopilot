@@ -46,7 +46,8 @@ Click the provided link to initiate the deployment, ensuring you alter only the 
 • To deploy the Azure logic app, click on the link provided above.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FSolutions%2FUserreportedphishing%2Flogic_app%2Fazuredeploy.json" target="_blank">
-
+<img src="https://aka.ms/deploytoazurebutton"/>
+</a>
 <br>
 
 
