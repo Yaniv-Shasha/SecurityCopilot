@@ -1,7 +1,7 @@
 azure-functions==1.20.0
 beautifulsoup4==4.12.3
 bs4==0.0.2
-certifi==2024.6.2
+certifi==2024.7.4
 charset-normalizer==3.3.2
 filelock==3.15.4
 h11==0.14.0
