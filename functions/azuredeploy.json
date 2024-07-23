@@ -8,8 +8,8 @@
         }
     },
     "variables": {
-           "FunctionName": "[concat(toLower(parameters('FunctionName')), uniqueString(resourceGroup().id))]",		
-		"StorageAccountName":"[concat(substring(variables('FunctionName'), 0, 20), 'sa')]"
+        "FunctionName": "[concat(toLower(parameters('FunctionName')), uniqueString(resourceGroup().id))]",		
+		"StorageAccountName":"[concat(substring(parameters('FunctionName'), 0, 20), 'sa')]"
     },
     "resources": [
         {
