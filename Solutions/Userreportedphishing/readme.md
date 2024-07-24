@@ -31,7 +31,7 @@ Click the provided link to initiate the deployment, ensuring you alter only the 
 <br>
 
 <p align="center">
-<img src="./images/deploy_func.jpg?raw=true"/>
+<img src="./images/deploy_func1.jpg?raw=true"/>
 </p>
 <br>
 
