@@ -50,28 +50,42 @@ Click the provided link to initiate the deployment, ensuring you alter only the 
 </a>
 <br>
 
+## Enter the following details:
+1.	The resource group for the Azure function we set up earlier.<br>
+2.	The name given to the Azure function app from the prior step.<br>
 
+*** keep the function names 01/02 as they are.
 
-
+<p align="center">
+<img src="./images/deploy_LAPP.jpg?raw=true"/>
+</p>
 <br>
 
-### Deployment 
 
-To deploy the above logic app, you need to<br>
-•   Press on the Deploy option, select your subscription and the resource group (select the same tenant that Security Copilot is enabled)<br>
+## Post Deploying steps:
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FSolutions%2FUserreportedphishing%2Fazuredeploy.json" target="_blank">
-    <img src="https://aka.ms/deploytoazurebutton"/>
-</a>
+Once the installation is finished, go to the resource group and access the logic app that we have recently deployed. 
 <br>
 
-### Post Deployment
+<p align="center">
+<img src="./images/logapp-postdeploying.jpg?raw=true"/>
+</p>
+<br>
 
-•   Authenticate with the users mention above (you can use different user for the Copilot actions and to the sentinel actions)<br>
-•   To run the logic app in a manual way, open Microsoft Sentinel incident page, right click on specific incident and press run playbook, select logic app you just deploy and press run.<br>
-•   To run the logic in automatic way, create an automation rule in sentinel and connect this playbook as the action for this rule.<br>
+•	To set up authentication, go to the menu on the left and click on API connection. 
 
+<p align="center">
+<img src="./images/api_connection.jpg?raw=true"/>
+</p>
+<br>
 
-<img src="https://github.com/Yaniv-Shasha/SecurityCopilot/blob/ccbd305c539800eea2a1f7c1a0905aff954e2e25/Playbooks/Copilot-Sentinel_investigation-DynamicSev/images/full_logic_app.jpg"/>
+•	Click on **Office365-1-PhishingAnalysis**, then in the left menu, open General and click Edit Api connection. <br>
 
+<p align="center">
+<img src="./images/api_connection-edit.jpg?raw=true"/>
+</p>
+<br>
 
+•	Click on authorize, authenticate using the users from the shared mailbox, and then click save.
+•	Repeat the process for the Security copilot API connection, except authenticate with users who have the Copilot for security contributor permission.
+Your automation is ready for action! 
