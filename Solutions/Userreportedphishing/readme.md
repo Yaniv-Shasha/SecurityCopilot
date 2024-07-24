@@ -21,12 +21,13 @@ The solution consists of two primary components: <br>
 ## Deployment of the Azure Function:
 
 The initial step to deploy the solution is setting up the Azure function.<br>
-Click the provided link to initiate the deployment, ensuring you alter only the target resource group parameter<br>
+Click the provided link to initiate the deployment, ensuring you alter only the target resource group parameter:<br>
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYaniv-Shasha%2FSecurityCopilot%2Fmain%2FSolutions%2FUserreportedphishing%2Fazuredeploy.json" target="_blank">
 <img src="https://aka.ms/deploytoazurebutton"/>
 </a>
 
+<br>
 <br>
 
 <p align="center">
