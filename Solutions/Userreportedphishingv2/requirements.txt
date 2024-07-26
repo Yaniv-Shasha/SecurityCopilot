@@ -32,7 +32,7 @@ pcodedmp==1.2.6
 pycparser==2.22
 pyparsing==3.1.2
 red-black-tree-mod==1.20
-requests==2.31.0
+requests==2.32.2
 requests-file==2.1.0
 RTFDE==0.1.2
 scapy==2.5.0
