@@ -426,7 +426,7 @@
     },
     "type": "Function",
     "inputs": {
-    "body": "@outputs('Base64_ContentBytes_decode')",
+     "body": "@{variables('raw_email')}",
     "function": {
     "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('FunctionAppRG'), '/providers/Microsoft.Web/sites/', parameters('FunctionAppName'), '/functions/', parameters('FunctionName01'))]"
      }
