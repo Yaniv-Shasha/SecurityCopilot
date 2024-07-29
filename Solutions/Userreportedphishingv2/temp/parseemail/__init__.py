@@ -59,20 +59,20 @@ def extract_original_email(raw_email: bytes) -> str:
 
 def extract_domains(content: str) -> List[str]:
     logging.info("Extracting domains from email content")
-
+    
     # Pattern to extract domains and URLs
     domain_pattern = r'\b[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b'
     url_pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
     # Find all URLs first
     urls = re.findall(url_pattern, content)
-
+    
     # Parse domains from URLs
-    url_domains = {urlparse(url).netloc for url in urls}
+    url_domains = {urlparse(url).netloc.lower() for url in urls}
 
     # Find all domain patterns directly
-    direct_domains = re.findall(domain_pattern, content)
-
+    direct_domains = [domain.lower() for domain in re.findall(domain_pattern, content)]
+    
     # Combine and clean up
     all_domains = url_domains.union(direct_domains)
 
@@ -210,7 +210,7 @@ def parse_email(raw_email: bytes) -> Dict:
             "dkim_result": dkim_result,
             "spf_result": spf_result,
             "dmarc_result": dmarc_result,
-            "body": strip_html_tags(body),
+            "body": body,
             "attachments": attachments,
         }
 
@@ -251,6 +251,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         raw_email = req.get_body()
 
         # Check if the raw email is a string, if so, convert it to bytes
+
         if isinstance(raw_email, str):
             raw_email = raw_email.encode('utf-8')
 
@@ -266,6 +267,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 "urls": list(all_urls),
                 "domains": list(all_domains),
             }
+
+            # Apply the strip_html_tags function to the email content's body
+            result["email_content"]["body"] = strip_html_tags(result["email_content"]["body"])
 
             json_result = json.dumps(result, indent=4)
             return func.HttpResponse(json_result, mimetype="application/json")
