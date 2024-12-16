@@ -41,6 +41,6 @@ soupsieve==2.5
 tldextract==5.1.2
 tzdata==2024.1
 tzlocal==5.2
-urllib3==2.2.1
+urllib3==2.2.2
 win_unicode_console==0.5
 yarl==1.9.4
