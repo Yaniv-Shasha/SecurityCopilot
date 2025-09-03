@@ -1,0 +1,102 @@
+# 🛡️ Security Incident Investigation Report
+
+## 📌 Incident Overview
+- **Incident ID:** INC-{{ID}}
+- **Date Detected:** {{YYYY-MM-DD HH:MM UTC}}
+- **Reported By:** {{Source (e.g., SOC, automated alert)}}
+- **Severity:** 🔴 High | 🟠 Medium | 🟢 Low
+- **Status:** Open | In-Progress | Resolved
+- **Summary:**  
+  _Short description of the incident (e.g., suspicious PowerShell execution detected on endpoint)._
+
+---
+
+## 🕵️ Investigation Steps
+1. **Initial Alert Review**
+   - Description:  
+     _What triggered the alert, source system, rules, detection logic._
+   - Evidence:  
+     ```log
+     Sample logs, KQL query output, raw alert details
+     ```
+
+2. **Data Collection**
+   - Collected data sources: Endpoint logs, network telemetry, EDR, SIEM queries  
+   - Screenshots / Charts:  
+     ![Log timeline](./images/timeline.png)
+
+3. **Triage & Scoping**
+   - Questions answered:  
+     - How many endpoints/users are impacted?  
+     - Any lateral movement?  
+   - Diagram (attack flow):  
+     ```mermaid
+     graph LR
+       A[Phishing Email] --> B[User Clicks Link]
+       B --> C[Malware Execution]
+       C --> D[Persistence Established]
+     ```
+
+4. **Deep Analysis**
+   - Malware or file hash analysis results  
+   - MITRE ATT&CK mapping  
+   - Timeline reconstruction
+
+5. **Containment & Mitigation**
+   - Steps taken: account lockout, endpoint isolation, blocking indicators  
+   - Screenshots/commands used:  
+     ```bash
+     # Example
+     Defender ATP isolate machine --id 12345
+     ```
+
+6. **Resolution & Recovery**
+   - Actions: Patch applied, accounts reset, monitoring enabled  
+   - Verification: confirmed remediation steps successful  
+
+---
+
+## 🔎 Findings
+- **Root Cause:** {{Explain cause}}
+- **Impacted Systems:** {{List machines, accounts, IPs}}
+- **Indicators of Compromise (IOCs):**
+  - File hashes:  
+    - SHA256: `abc123...`
+  - Domains:  
+    - `malicious-domain.com`
+  - IPs:  
+    - `192.168.1.50`
+
+---
+
+## 📊 Incident Timeline
+| Time (UTC)        | Event Description                     | Source       |
+|-------------------|---------------------------------------|--------------|
+| 2025-09-03 09:45  | Alert triggered: Suspicious login     | Azure AD     |
+| 2025-09-03 09:55  | SOC triaged alert                     | Defender SIEM|
+| 2025-09-03 10:15  | Endpoint isolated                     | EDR Agent    |
+
+---
+
+## 📈 Impact Assessment
+- **Users Affected:** {{Number}}
+- **Data Exfiltrated:** None / Unknown / Confirmed (list details)
+- **Business Impact:**  
+  _Short explanation of downtime, customer effect, compliance concern._
+
+---
+
+## ✅ Recommendations
+- Improve detection logic for {{X}}  
+- User awareness training on phishing campaigns  
+- Enhance logging on {{System}}  
+- Patch {{CVE}} across impacted assets  
+
+---
+
+## 📎 Appendices
+- Full queries (KQL/SQL/EDR searches)  
+- Screenshots of key evidence  
+- References to related incidents  
+
+---
