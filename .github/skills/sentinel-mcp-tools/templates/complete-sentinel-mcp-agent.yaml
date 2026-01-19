@@ -1,0 +1,146 @@
+# =============================================================================
+# Complete Agent with Sentinel MCP Tools
+# =============================================================================
+# Example: A full Security Copilot agent that uses Sentinel MCP tools
+# for incident investigation and threat hunting
+# =============================================================================
+
+Descriptor:
+  Name: Contoso.SOC.SentinelInvestigator-260116
+  DisplayName: Sentinel Investigation Agent
+  Description: An AI agent that investigates security incidents using Microsoft Sentinel MCP tools for data exploration and entity analysis.
+
+SkillGroups:
+  # ===========================================================================
+  # Main AGENT - Orchestrates the investigation workflow
+  # ===========================================================================
+  - Format: AGENT
+    Skills:
+      - Name: IncidentInvestigator-260116
+        Description: Main agent for investigating security incidents using Sentinel data
+        Interfaces:
+          - Agent
+        Inputs:
+          - Name: InvestigationRequest
+            Description: The investigation request - can be an incident ID, user ID, or description of what to investigate
+            Required: true
+        Settings:
+          Model: gpt-4.1
+          Instructions: |
+            <|im_start|>system
+            You are a Security Operations Center (SOC) analyst assistant specialized in investigating security incidents using Microsoft Sentinel data.
+
+            Your investigation workflow:
+            1) First, use list_sentinel_workspaces to identify available workspaces
+            2) Use search_tables to find relevant data tables for the investigation
+            3) Use query_lake to retrieve specific security data
+            4) For user-related investigations, use analyze_user_entity to get comprehensive user analysis
+            5) For URL-related investigations, use analyze_url_entity for threat intelligence
+            6) Use get_entity_analysis to retrieve analysis results
+
+            When investigating:
+            - Start broad, then narrow down based on findings
+            - Look for anomalies and patterns
+            - Cross-reference multiple data sources
+            - Consider the timeline of events
+            - Identify affected entities and potential lateral movement
+
+            Provide a structured report including:
+            - Executive Summary
+            - Timeline of Events
+            - Affected Entities
+            - Risk Assessment
+            - Recommended Actions
+            - Evidence and IOCs
+            <|im_end|>
+            <|im_start|>user
+            {{InvestigationRequest}}
+            <|im_end|>
+
+        ChildSkills:
+          # Sentinel MCP Tools (from data-exploration collection)
+          - query_lake
+          - search_tables
+          - analyze_user_entity
+          - analyze_url_entity
+          - get_entity_analysis
+          - list_sentinel_workspaces
+          # GPT helper skill
+          - SummarizeFindings-260116
+
+  # ===========================================================================
+  # Sentinel MCP Data Exploration Tools
+  # ===========================================================================
+  - Format: MCP
+    Settings:
+      Endpoint: https://sentinel.microsoft.com/mcp/data-exploration
+      TokenScope: 4500ebfb-89b6-4b14-a480-7f749797bfcd/.default
+      UseStreamableHttp: true
+      UsePluginAuth: false
+      AllowedTools: query_lake,search_tables,analyze_user_entity,analyze_url_entity,get_entity_analysis,list_sentinel_workspaces
+      TimeoutInSeconds: 300
+
+  # ===========================================================================
+  # GPT Helper Skills
+  # ===========================================================================
+  - Format: GPT
+    Skills:
+      - Name: SummarizeFindings-260116
+        DisplayName: Summarize Investigation Findings
+        Description: Creates an executive summary of investigation findings
+        Inputs:
+          - Name: Findings
+            Description: The raw investigation findings to summarize
+            Required: true
+        Settings:
+          ModelName: gpt-4.1
+          Template: |-
+            <|im_start|>system
+            You are a security report writer. Create a concise executive summary from the provided investigation findings.
+            
+            Format your summary as:
+            ## Executive Summary
+            [2-3 sentence overview]
+            
+            ## Key Findings
+            - [Bullet points of critical findings]
+            
+            ## Risk Level
+            [Critical/High/Medium/Low with justification]
+            
+            ## Immediate Actions Required
+            1. [Numbered list of actions]
+            <|im_end|>
+            <|im_start|>user
+            {{Findings}}
+            <|im_end|>
+
+# =============================================================================
+# Agent Definition
+# =============================================================================
+AgentDefinitions:
+  - Name: SentinelInvestigationAgent-260116
+    DisplayName: Sentinel Investigation Agent
+    Description: Investigates security incidents using Microsoft Sentinel MCP tools for comprehensive data exploration and entity analysis
+    Publisher: Contoso
+    Product: SOC
+    RequiredSkillsets:
+      - Contoso.SOC.SentinelInvestigator-260116
+    AgentSingleInstanceConstraint: None
+    Settings:
+      - Name: DefaultWorkspace
+        Label: Default Sentinel Workspace
+        Description: The default Sentinel workspace to use for queries
+        HintText: Enter your Sentinel workspace name
+        SettingType: String
+        Required: false
+      - Name: DefaultLookback
+        Label: Default Lookback Period (hours)
+        Description: Default time window for queries
+        HintText: Enter 24 for last 24 hours
+        SettingType: String
+        Required: false
+    Triggers:
+      - Name: ManualInvestigation
+        DefaultPeriodSeconds: 0
+        ProcessSkill: Contoso.SOC.SentinelInvestigator-260116.IncidentInvestigator-260116

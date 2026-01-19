@@ -1,0 +1,119 @@
+# =============================================================================
+# Security Copilot Agent - Complete Working Example
+# =============================================================================
+# This is a complete, working example of a Security Copilot agent manifest
+# that demonstrates URL geolocation analysis.
+#
+# Source: https://learn.microsoft.com/en-us/copilot/security/developer/agent-manifest
+# =============================================================================
+
+Descriptor:
+  Name: Contoso.SecurityOperations.URLGeoAnalyzer-260116
+  DisplayName: URL Geolocation Analyzer
+  Description: An agent that helps security analysts understand the geographic hosting situation of URLs by extracting hostnames, resolving DNS, and looking up IP geolocations.
+
+SkillGroups:
+  # ===========================================================================
+  # AGENT FORMAT - Main orchestration agent
+  # ===========================================================================
+  - Format: AGENT
+    Skills:
+      - Name: URLLocationAgent-260116
+        Description: The main entrypoint for URL geolocation analysis
+        Interfaces:
+          - Agent
+        Inputs:
+          - Required: true
+            Name: URL
+            Description: A URL the agent should investigate
+        Settings:
+          Model: gpt-4.1
+          Instructions: |
+            <|im_start|>system
+            You are an AI agent that helps a security analyst understand the hosting situation of a URL (the input).
+            You'll do this by following a three-step process:
+            
+            1) Use ExtractHostname to find the hostname from the URL provided as input
+            2) Use GetDnsResolutionsByIndicators to extract IP Addresses that the hostname has been observed resolving to. This may produce a list of IP Addresses.
+            3) One-at-a-time, use lookupIpAddressGeolocation to look up the geolocation of an IP address.
+
+            Produce a simply formatted response telling the security analyst which locations that URL is being served from.
+            If you encounter an error share that.
+            Always return something so the user knows that something happened.
+            
+            <|im_end|>
+            <|im_start|>user
+            {{URL}}
+            <|im_end|>
+
+        ChildSkills:
+          - lookupIpAddressGeolocation
+          - ExtractHostname-260116
+          - GetDnsResolutionsByIndicators
+
+  # ===========================================================================
+  # GPT FORMAT - Text processing skill
+  # ===========================================================================
+  - Format: GPT
+    Skills:
+      - Name: ExtractHostname-260116
+        DisplayName: Extract Hostname from URL
+        Description: Extracts the hostname component from a given URL
+        Inputs:
+          - Name: URL
+            Description: A URL string to extract the hostname from
+            Required: true
+        Settings:
+          ModelName: gpt-4.1
+          Template: |-
+            <|im_start|>system
+            Return the hostname component of the URL provided as input. For example:
+            - If the input is 'https://www.mlb.com/', return 'www.mlb.com'
+            - If the input is 'http://dev.mycompany.co.uk/sign-up/blah?a=12&b=12&c=32#23', return 'dev.mycompany.co.uk'
+            - If the input is 'ftp://x.espon.com', return 'x.espon.com'
+            <|im_end|>
+            <|im_start|>user
+            {{URL}}
+            <|im_end|>
+
+  # ===========================================================================
+  # KQL FORMAT - Query skill for Defender
+  # ===========================================================================
+  - Format: KQL
+    Skills:
+      - Name: RecentUrlClicks-260116
+        Description: Returns 10 recently clicked URLs from Defender
+        Settings:
+          Target: Defender
+          Template: |
+            UrlClickEvents
+            | sort by TimeGenerated desc
+            | limit 10
+            | project Url
+
+# =============================================================================
+# AGENT DEFINITIONS
+# =============================================================================
+AgentDefinitions:
+  - Name: URLGeoLocationAgent-260116
+    DisplayName: URL Geolocation Agent
+    Description: An agent to help analysts understand URL hosting and geographic distribution
+    Publisher: Contoso
+    Product: SecurityOperations
+    RequiredSkillsets:
+      - Contoso.SecurityOperations.URLGeoAnalyzer-260116
+      - ThreatIntelligence.DTI
+      - GeoLocation_APIPlugin
+    AgentSingleInstanceConstraint: None
+    Settings:
+      - Name: LookbackWindowMinutes
+        Label: Max Lookback Window in minutes
+        Description: The maximum number of minutes to find clicked URLs
+        HintText: You should probably enter 5
+        SettingType: String
+        Required: true
+    Triggers:
+      - Name: ScheduledAnalysis
+        DefaultPeriodSeconds: 300
+        FetchSkill: Contoso.SecurityOperations.URLGeoAnalyzer-260116.RecentUrlClicks-260116
+        ProcessSkill: Contoso.SecurityOperations.URLGeoAnalyzer-260116.URLLocationAgent-260116

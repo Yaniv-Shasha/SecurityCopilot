@@ -1,0 +1,639 @@
+Descriptor:
+  Name: PhishURLBlastRadiusAgent2025
+  DisplayName: Phish URL Blast Radius Agent 1234
+  Description: Identify users who clicked on a phishing URL and assess the scope of the blast radius
+  DescriptionDisplay: Identify users who clicked on a phishing URL and assess the scope of the blast radius
+  DescriptionForModel: Check who clicked on a phishing URL and understand the involved Users blast radius
+  Category: Microsoft
+  UserVisibilityFeatureFlags:
+  - EnablePhishURLBlastRadiusAgent
+  UserVisibility: IfFeatureFlagsEnabled
+  PlannerVisibilityFeatureFlags:
+  - EnablePhishURLBlastRadiusAgent
+  PlannerVisibility: Never
+  CanToggle: true
+  Settings:
+  - Name: TenantId
+    Required: true
+  - Name: WorkspaceName
+    Required: true
+  - Name: SubscriptionId
+    Required: true
+  - Name: ResourceGroupName
+    Required: true
+  SupportedAuthTypes:
+  - None
+SkillGroups:
+- Format: AGENT
+  Skills:
+    - Name: PhishURLBlastRadiusAgent
+      DisplayName: PhishURLBlastRadiusAgent
+      Description: This agent will take a url process it before sending it to the next agent
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Inputs:
+        - Required: true
+          Name: Url
+          Description: |- 
+                        a Url like `https://www.bing.com` | `https://www.bing.com` 
+      Settings:
+        Instructions: |-
+                 Role: You are a helper agent responsible for processing a single piece of input: a URL.
+                  **CRITICAL URL VALIDATION REQUIREMENT:**
+                  Before processing ANY URL, you MUST verify if the url is ** not ** safelink url.
+                  1. **Check**: Does the URL contain `.safelinks.protection.outlook.com`? if it does run the convertion logic to convert the safelink url to the original url.
+                  **If you receive a safelinks URL or encoded URL, you MUST:**
+                  - run the conversion logic to extract the original URL. 
+
+                    A clean url like `https://www.bing.com` | `https://www.bing.com` , if you have safelink url folow this rules:
+                    ### Primary Processing Rules:
+                    1. **If the input contains `.safelinks.protection.outlook.com`** (case-insensitive):
+                      * **Step 1**: Replace HTML entities: `&amp;` → `&`, `&lt;` → `<`, `&gt;` → `>`, `&quot;` → `"`
+                      * **Step 2**: Locate the **first** `url=` parameter (case-insensitive match)
+                      * **Step 3**: Extract the value after `url=` (stop at `&` or end of string)
+                      * **Step 4**: Apply URL percent-decoding **repeatedly** until no further changes occur
+                      * **Step 5**: Return ONLY the fully decoded destination URL
+                    2. **If the input is a normal URL** (starts with `http://` or `https://` and does NOT contain safelinks): 
+                      * Return it unchanged
+                    ### Fallback Validation - MANDATORY CHECK:
+                    **Before processing any URL, the agent MUST verify:**
+                    - Does the URL still contain `.safelinks.protection.outlook.com`? → **RETRY decoding**
+      
+                    ### Enhanced Examples:
+                    | Input | Expected Output |
+                    |-------|-----------------|
+                    | `https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Fcontoso.com%2Fdocs%2Ffile.pdf&data=…` | `https://contoso.com/docs/file.pdf` |
+                    | `https://emea01.safelinks.protection.outlook.com/?url=http%253A%252F%252Finternal.test%252Fpage.html&data=…` | `http://internal.test/page.html` |
+                    | `https://nam12.safelinks.protection.outlook.com/?data=abcdef` | `Not a valid URL.` |
+                    | `http://www.google.com` | `http://www.google.com` |
+                    | `https://www.bing.com` | `https://www.bing.com` |
+                    | `not_a_link` | `Not a valid URL.` |
+                    | `https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Fspace.com%2Fdoc.pdf` | `https://space.com/doc.pdf` |
+                    | `HTTPS://Nam12.SafeLinks.Protection.Outlook.com/?URL=https%3a%2f%2fPascalCase.com%2findex.html` | `https://PascalCase.com/index.html` |
+                    | `https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwoodgrovebank2-dev-ed.my.salesforce.com%2F%3Fc%3D1B9ELh…%253D%253D&data=abc` | `https://woodgrovebank2-dev-ed.my.salesforce.com/?c=1B9ELh…==` |
+                    | `https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fctrk.klclick1.com%2Fl%2F01JY6P9G0Y56PSQ811P3EDNEQM_0&data=…` | `https://ctrk.klclick1.com/l/01JY6P9G0Y56PSQ811P3EDNEQM_0` |
+                    | `https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fctrk.klclick1.com%2Fl%2F01JY6P9G0Y56PSQ811P3EDNEQM_15&data=…` | `https://ctrk.klclick1.com/l/01JY6P9G0Y56PSQ811P3EDNEQM_15` |
+                    | `https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Funiversallink.passportcorporate.com%2F%3Fmpk%3DUIbXpHP_4v_sz8oO7wMIsA%3D%3D%26b%3D22005%26VendorID%3D114443&data=…` | `https://universallink.passportcorporate.com/?mpk=UIbXpHP_4v_sz8oO7wMIsA==&b=22005&VendorID=114443` |
+                    | `https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fn​l.nytimes.com%2Ff%2F​a%2FRoEiv…~~&data=…` | `https://n​l.nytimes.com/f/​a/RoEiv…~~` |
+                    | `https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fl.businessinsider.com%2Fa%2Fclick%3F_t%3Dc8e10479a20f45bb…%253D&data=…` | `https://l.businessinsider.com/a/click?_t=c8e10479a20f45bb…&…` |
+
+                    *(Ellipses `…` indicate truncated segments; in practice the agent must return the full strings.)*
+
+                    --- 
+                    > **NEVER** pass safelinks format to the agent.  
+                        after converting this Url you must send the URL to PhishURLQueryAgent Agent
+
+      ChildSkills:
+          - PhishURLQueryAgent
+    - Name: PhishURLQueryAgent
+      DisplayName: PhishURLQueryAgent
+      Description: |-
+        Processes a given URL to identify users who clicked it, extracts their UPN and properties. Generates a comprehensive risk and blast radius based on the analysis.
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Inputs:
+        - Required: true
+          Name: Url
+          Description: |-
+           Url from the UrlHandlingAgent in the above format https://www.bing.com` or `https://www.bing.com` or https://contoso.com/docs/file.pdf
+      Settings:
+        Instructions: |-
+          Task: Upon receiving the URL, run a query to determine which user (or users) clicked the URL.
+          Extract the User Principal Name (UPN) and all relevant user properties from the query results.
+      
+          Data Passing: After extracting the UPNs, forward them to **all child agents** for further processing.
+          **CRITICAL:** You **MUST** send the UPN data to **every** child agent ensuring each one receives the necessary input.
+          **DO NOT selectively send data to only one child agent.** **ALL child agents MUST be engaged.**
+          
+          Send UPNs and related user properties to the following as appropriate:
+          -  **UserPeers**
+          -  **RiskUserPurview**
+          -  **BehaviorInfo**
+          -  **DevicesNumber**
+          -  **RiskUserEntra**
+          -  **AssignedRoles**
+          -  **AddSPNPermission**
+          -  **UEBABlastRadius**
+          -  **SuspiciousMailboxActivities**
+          -  **SummarizeFindingAgent**
+          
+          No Fabrication:
+          - Only use information directly derived from the query results.
+          - If data is missing, indicate that it is unavailable.
+          **Do NOT fabricate or assume information.**
+          
+          Response Format:
+          Provide all outputs clearly and systematically.
+          - If additional information is needed, request it explicitly instead of making assumptions.
+          
+          Execution Flow:
+          - Use skill `RunHuntingQuery` to run the following query:
+
+            let url1 = '{{Url}}';
+            let cleanUrl = case(
+                url1 startswith "https://www.", substring(url1, 12),
+                url1 startswith "http://www.", substring(url1, 11),
+                url1 startswith "https://", substring(url1, 8),
+                url1 startswith "http://", substring(url1, 7),
+                url1 startswith "www.", substring(url1, 4),
+                url1
+            );
+            UrlClickEvents              
+            | where TimeGenerated > ago(30d)              
+            | where Url contains cleanUrl             
+            | summarize arg_max(TimeGenerated, *) by AccountUpn              
+            | extend AccountUpnLower = tolower(AccountUpn)
+            | join kind=inner (                 
+                IdentityInfo                  
+                | summarize arg_max(TimeGenerated, *) by AccountUpn
+                | extend AccountUpnLower = tolower(AccountUpn)             
+            ) on AccountUpnLower              
+            | summarize by AccountObjectId, AccountUpn, JobTitle, IsAccountEnabled              
+            | extend TotalUserCount = toscalar(                 
+                UrlClickEvents                  
+                | where TimeGenerated > ago(30d)                  
+                | where Url contains cleanUrl                 
+                | summarize arg_max(TimeGenerated, *) by AccountUpn
+                | extend AccountUpnLower = tolower(AccountUpn)                  
+                | join kind=inner (                     
+                    IdentityInfo                      
+                    | summarize arg_max(TimeGenerated, *) by AccountUpn
+                    | extend AccountUpnLower = tolower(AccountUpn)                 
+                ) on AccountUpnLower                  
+                | summarize count()              
+            )
+
+          - Pass the query results to **ALL child agents** **DO NOT SKIP ANY CHILD AGENTS.**
+      ChildSkills:
+        - RunHuntingQuery
+        - BehaviorInfo
+        - RiskUserPurview
+        - UserPeers
+        - RiskUserEntra
+        - AddSPNPermission
+        - AssignedRoles
+        - UEBABlastRadius
+        - SuspiciousMailboxActivities
+        - DevicesNumber
+        - SummarizeFindingAgent
+    - Name: SummarizeFindingAgent
+      DisplayName: SummarizeFindingAgent
+      Description: |-
+        You are an agent that summarize all the outputs from all the agents and create report
+        Agent that summarize all the outputs from all the agents and create report
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: Input
+          Description: data from all other agents
+      Settings:
+        Instructions: |-  
+          # Phishing Blast Radius Investigation Agent
+
+            You are responsible for generating a leadership-ready investigation report that aggregates findings across all phishing-related agents. Your report must strictly follow the output template and logic defined in this instruction.
+
+            ## Mandatory Execution Workflow
+
+            ### Step -1: Phishing URL Summary Header
+            - You MUST display a summary block **at the very top** of the report before any headings.
+            - This block must include:
+              1. The exact **URL** being analyzed (must be non-clickable). **you must present the url in the section**
+              2. The **total number of users who clicked** it.
+            - The URL must be extracted from the input analysis and printed in a **safe format**:
+              - `http://malicious-site.com`
+              - Or: [http://malicious-site.com]
+              - Or: http:// malicious .com
+            - The output must look like this (replace dynamically):
+              ```
+              This Report will calculate the Risk factor for the users that pressed on the <URL-replace it with the actual url>
+
+              Risk Assessment Summary: 
+              Url Click <URL>
+              Total Number of Users that clicked the URL: <number user clicks>
+              ```
+            - The report MUST include both values before the first heading.
+            - If the URL is missing in this summary, your job is **not complete successfully**.
+
+            ### Step 0: Enforce Safe URL Presentation
+            - CRITICAL SECURITY REQUIREMENT: All URLs must be presented as non-clickable plain text.
+            - Use one of the following safe formats only:
+              - Backticks: `http://example.com`
+              - Spaces: http:// example .com
+              - Brackets: [http://example.com]
+              - Explicit prefix: "URL: http://example.com"
+            - Never include live hyperlinks.
+
+            ### Step 1: Load Calculation Engine
+            - MANDATORY: You must use `BlastRadiusAgentCalculations.docx` via the AskUploadedFiles skill.
+            - every user score **must start** with baseline risk of 1
+            - This file defines how to compute:
+              - Baseline Risk - **you must use baseline risk as 1**
+              - Insider Risk Severity
+              - All scoring logic for each user field
+            - Do not continue if the file is not loaded.
+
+            ### Step 2: Enforce Report Format and Section Order
+            - The final report must follow the exact format shown in the "Embedded Template" section.
+            - Do NOT change section names, order, or placement.
+            - All placeholder sections must be filled with evidence-driven content.
+
+            ### Step 3: Build the Risk Assessment Table
+            - After the Conclusion section, include a "User-Specific Risk Findings" section.
+            - The table must have exactly the following 14 columns in order:
+              1) UserUPN
+              2) Baseline Risk
+              3) Job Title Factor
+              4) Insider Risk Severity
+              5) Entra Risk Severity
+              6) AAD Sensitive Roles
+              7) Number of Login Devices
+              8) Suspicious Application Permission Grants
+              9) Suspicious Mailbox Activities
+              10) Sentinel UEBA BlastR
+              11) Behavioral Anomalies
+              12) User Peer Impact
+              13) Aggregate Risk and Blast Radius
+              14) Detailed Findings
+            - Use Markdown or HTML to render the table.
+            - Every user who clicked the phishing URL must have their own row.
+            - The number of rows in the table must match <TotalUserCount>.
+              -  If row count = <TotalUserCount>, your job is complete successfully.
+              -  If row count ≠ <TotalUserCount>, your job is not complete successfully.
+
+            ### Step 4: Populate Scores and Evidence
+            - Use scoring logic from BlastRadiusAgentCalculations.docx.
+            - Show translated scores, not raw values (e.g., use score “3” for 15 logins).
+            - Each cell must contain a score and brief justification (e.g., "High (85) – 3 anomalies").
+
+            ### Step 5: Add Summary Rows (Optional)
+            - You may include a row for "Other Users" if needed.
+            - This row must also follow the same 14-column format.
+
+            ### Step 6: Present Final Metrics
+            - After the table, include:
+              - Blast Radius Calculation
+              - Final Blast Radius Classification
+              - Risk Calculation Logic (as a heading only, no body)
+
+            ## Embedded Template (Structure to Follow Exactly)
+
+            ```markdown
+            ## User-Specific Risk Findings
+
+            | UserUPN | Baseline Risk | Job Title Factor | Insider Risk Severity | Entra Risk Severity | AAD Sensitive Roles | Number of Login Devices | Suspicious App Permission Grants | Suspicious Mailbox Activities | Sentinel UEBA BlastR | Behavioral Anomalies | User Peer Impact | Aggregate Risk and Blast Radius | Detailed Findings |
+            |---------|----------------|------------------|------------------------|----------------------|----------------------|--------------------------|-----------------------------------|-------------------------------|-----------------------|------------------------|-------------------|-------------------------------|--------------------|
+            | user@domain.com | Medium (45) | High (C-suite) | High (75) | Medium (55) | Yes | 3 | 0 | 2 anomalies | High (80) | Medium (60) | High (75) | **High (78)** | Clicked URL `http://phish.com` |
+            | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
+
+            **Blast Radius Calculation**  
+            - Aggregate Risk Score: <xxx>  
+            - Number of Users Involved: <xx>  
+            - Blast Radius Classification: **High/Medium/Low** based on the table evidence  
+            - Supporting Evidence: [Explain key contributors from the table]
+
+            **Final Blast Radius**  
+            [Summarize incident impact, top score drivers, user risk spread, and reasoning behind the classification]
+
+            **Risk Calculation Logic**
+            ```
+
+            ## Quality Assurance Checklist <dont include it in the report>
+
+            - [ ] All users who clicked the URL are included in the table  
+            - [ ] Table contains exactly 14 columns in the correct order  
+            - [ ] Scores are computed via BlastRadiusAgentCalculations.docx  
+            - [ ] URLs are rendered in non-clickable safe formats  
+            - [ ] Section headers match template exactly  
+            - [ ] Blast Radius calculation section is complete and justified  
+            - [ ] The report is well-formatted and easy to paste into Markdown or HTML
+
+      ChildSkills:
+        - AskUploadedFiles
+- Format: KQL
+  Skills:
+    - Name: RiskUserPurview
+      Description: pull all the alerts with the associate data
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserUPN
+          Description: a list of one user upn like mscot@woodgrove.ms or multiple. The results from this property will be used in an automation workflow that only accepts a single string. UserUPN with surrounded by double quotes like "meganb@parkcity.alpineskihouse.com", "cam@parkcity.alpineskihouse.com"
+      Settings:
+        Target: Defender
+        Template: |-
+          let users  = dynamic([{{UserUPN}}]);
+          AlertEvidence 
+          | where TimeGenerated > ago(30d)
+          | where AccountUpn in (users)
+          | where  DetectionSource == "MicrosoftInsiderRiskManagement"
+          | summarize by AccountUpn , Severity , TimeGenerated , PolicyMatch = Title
+          | summarize arg_max(TimeGenerated, *) by Severity
+    - Name: RiskUserEntra
+      Description: pull the identity risk for a given user from sentinel
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserUPN
+          Description: |-
+            A list of one user UPN like mscot@woodgrove.ms or multiple. The results from this property will be used in an automation workflow that only accepts a single string, 
+            UserUPN surrounded by double quotes like "meganb@parkcity.alpineskihouse.com", "cam@parkcity.alpineskihouse.com"
+      Settings:
+        Target: Sentinel
+        TenantId: '{{TenantId}}'
+        SubscriptionId: '{{SubscriptionId}}'
+        ResourceGroupName: '{{ResourceGroupName}}'
+        WorkspaceName: '{{WorkspaceName}}'
+        Template: |-
+          let user_upn = dynamic([{{UserUPN}}]);
+          AADRiskyUsers
+          | where TimeGenerated > ago(30d)
+          | where UserPrincipalName in (user_upn)
+          | summarize arg_max(TimeGenerated, *) by UserPrincipalName 
+          | project UserPrincipalName, RiskLevel , RiskDetail
+    - Name: UEBABlastRadius
+      Description: pull the Blast Radius for a givin user from sentinel UEBA
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserUPN
+          Description: |-
+            A list of one user upn like mscot@woodgrove.ms or multiple.  The results from this property will be used in an automation workflow that only accepts a single string. 
+            UserUPN with surrounded by double quotes like "meganb@parkcity.alpineskihouse.com", "cam@parkcity.alpineskihouse.com"
+      Settings:
+        Target: Sentinel
+        TenantId: '{{TenantId}}'
+        SubscriptionId: '{{SubscriptionId}}'
+        ResourceGroupName: '{{ResourceGroupName}}'
+        WorkspaceName: '{{WorkspaceName}}'
+        Template: |-
+          let user_upn = dynamic([{{UserUPN}}]);
+          IdentityInfo
+          | where AccountUPN in (user_upn)
+          | where TimeGenerated > ago(30d)
+          | summarize arg_max(TimeGenerated, *) by AccountUPN
+          | project AccountUPN , BlastRadius
+    - Name: UserPeers
+      Description: you are an agent that get users list of AccountObjectId from PhishURLQueryAgent, and use as input for the KQL query, run this query only one time for all the users (the specific number of the user we need to process is the TotalUserCount)
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserObjectId
+          Description: list of one AccountObjectId or multiple The results from this property will be used in an automation workflow that only accepts a single string  AccountObjectId with surrounded by double quotes. like "dd60ee2f-0a2c-47b6-bdfd-69b7765fe3f1", "685f11ef-db12-42f1-8cad-b128452a6625"
+      Settings:
+        Target: Sentinel
+        TenantId: '{{TenantId}}'
+        SubscriptionId: '{{SubscriptionId}}'
+        ResourceGroupName: '{{ResourceGroupName}}'
+        WorkspaceName: '{{WorkspaceName}}'
+        Template: |-
+          let userObjectID = dynamic([{{UserObjectId}}]);
+          UserPeerAnalytics
+          | where TimeGenerated > ago(30d)
+          | where UserId in (userObjectID)
+          | order by Rank asc
+          | take 3
+          | project UserId, PeerUserId, Rank
+          | join kind=inner (
+                  IdentityInfo
+                  | where TimeGenerated > ago(30d)
+                  ) on $left.PeerUserId == $right.AccountObjectId  
+                  | project 
+                      UserId, 
+                      PeerUser = MailAddress,
+                      BlastRadius,
+                      Department,
+                      Rank,
+                      TimeGenerated
+                  | order by UserId
+                  | join kind=inner (
+                      IdentityInfo
+                  | where TimeGenerated > ago(30d)
+                  ) on $left.UserId == $right.AccountObjectId
+                  | project MailAddress, PeerUser, PeerBlastRadius = BlastRadius, TimeGenerated 
+                  | summarize arg_max(TimeGenerated, *) by MailAddress, PeerUser
+    - Name: AddSPNPermission
+      Description: |-
+          You are an agent that processes a list of user UPNs from the PhishURLQueryAgent agent, 
+          queries AuditLogs to check if users have granted permissions to an AAD application in the last 30 days, and outputs the application name, granted permissions, 
+          timestamp, and initiating user UPN to identify potential persistence methods. You must run one query for all users (append them into one query)
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserUPN
+          Description: A list of one user upn like mscot@woodgrove.ms or multiple. The results from this property will be used in an automation workflow that only accepts a single string. UserUPN surrounded by double quotes like "meganb@parkcity.alpineskihouse.com", "cam@parkcity.alpineskihouse.com"
+      Settings:
+        Target: Sentinel
+        TenantId: '{{TenantId}}'
+        SubscriptionId: '{{SubscriptionId}}'
+        ResourceGroupName: '{{ResourceGroupName}}'
+        WorkspaceName: '{{WorkspaceName}}'
+        Template: |-
+          let users  = dynamic([{{UserUPN}}]);
+          AuditLogs
+          | where TimeGenerated > ago(30d)
+          | where ActivityDisplayName == "Add delegated permission grant" or ActivityDisplayName == "Add application permission grant"
+          | where InitiatedBy.user.userPrincipalName in (users)
+          | project TimeGenerated, ActivityDisplayName, 
+                    AppName = TargetResources[0].displayName, 
+                    AppId = TargetResources[0].id, 
+                    PermissionGranted = TargetResources[0].modifiedProperties[0].newValue,
+                    AssignedBy = InitiatedBy.user.userPrincipalName
+          | order by TimeGenerated desc
+    - Name: AssignedRoles
+      Description: |-
+            You are an agent responsible for verifying role assignments for a list of users retrieved from the PhishURLQueryAgent agent. 
+            You will receive a list of user UPNs and your output should provide a structured report detailing the roles assigned to each user, 
+            enabling further risk assessment by downstream agents. Run one query that include all users, by appending them.
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserUPN
+          Description: a list of one user upn like mscot@woodgrove.ms or multiple,The results from this property will be used in an automation workflow that only accepts a single string, User Upn with surrounded by double quotes. like "meganb@parkcity.alpineskihouse.co", "cam@parkcity.alpineskihouse.co"
+      Settings:
+        Target: Defender
+        Template: |-
+          let users  = dynamic([{{UserUPN}}]);
+          IdentityInfo 
+          | where TimeGenerated > ago(30d)
+          | where EmailAddress in (users)
+          | summarize by EmailAddress, tostring(AssignedRoles)
+    - Name: DevicesNumber
+      Description: |-
+            You are an agent Process a list of user UPNs from the PhishURLQueryAgent agent in parallel, query IdentityLogonEvents to determine how many unique devices each user has logged into in the last 30 days, and outputs the device count and relevant login details for further analysis. Process all the users in one query, 
+            by appending them into one KQL query
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserUPN
+          Description: A list of one user upn like mscot@woodgrove.ms or multiple. The results from this property will be used in an automation workflow that only accepts a single string. User Upn with surrounded by double quotes, like "meganb@parkcity.alpineskihouse.com", "cam@parkcity.alpineskihouse.com"
+      Settings:
+        Target: Defender
+        Template: |-
+          let users  = dynamic([{{UserUPN}}]);
+          IdentityLogonEvents 
+          | where AccountUpn in (users)
+          | where TimeGenerated > ago(30d)
+          | where LogonType contains "Resource access"
+          | summarize count() by AccountUpn, DestinationDeviceName
+    - Name: SuspiciousMailboxActivities
+      Description: Process a list of user UPNs from the PhishURLQueryAgent agent in parallel, query CloudAppEvents to investigate recent Mailbox Permission changes, detect newly created or modified rules that could redirect or filter emails suspiciously, identify rules redirecting emails to unusual folders or external addresses, and confirm if the users activity is consistent or anomalous. Output findings with relevant details for further analysis
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserUPN
+          Description: A list of one user upn like mscot@woodgrove.ms or multiple. The results from this property will be used in an automation workflow that only accepts a single string. User Upn with surrounded by double quotes like "meganb@parkcity.alpineskihouse.com", "cam@parkcity.alpineskihouse.com"
+      Settings:
+        Target: Defender
+        Template: |-
+          let users  = dynamic([{{UserUPN}}]);
+          CloudAppEvents
+                | where TimeGenerated > ago(30d)
+                | extend parsed = parse_json(RawEventData)
+                | where ActionType in ("Add-MailboxPermission", "New-ManagementRoleAssignment", "Add-MailboxFolderPermission", "New-InboxRule", "Set-InboxRule", "Set-Mailbox", "New-TransportRule", "Set-TransportRule")
+                | extend UPN = tostring(parsed.UserId)
+                | where isnotempty(RawEventData.ObjectId)
+                | where isnotempty(RawEventData.UserId)
+                | extend Parameters = parsed.Parameters
+                | mv-expand Parameters
+                | extend Name = tostring(Parameters.Name)
+                | extend Value = tostring(Parameters.Value)
+                | extend packed = pack(Name, Value)
+                | where UPN in (users)    
+                | extend Parameters = parsed.Parameters
+                | mv-expand Parameters
+                | extend Name = tostring(Parameters.Name)
+                | extend Value = tostring(Parameters.Value)
+                | extend packed = pack(Name, Value)
+                | where Parameters has_any("DeleteMessage") or (Parameters has_any("MoveToFolder") and Parameters has_any("Conversation History"))
+                | summarize PackedInfo = make_bag(packed), ActionType=any(ActionType) by UPN, AccountObjectId, IPAddress, ISP, ReportId, TimeGenerated
+                | evaluate bag_unpack(PackedInfo)
+    - Name: BehaviorInfo
+      Description: Process a list of user UPNs from the PhishURLQueryAgent agent, query BehaviorInfo to detect behavioral anomalies, ensuring only actual data from Defender is used. If anomalies are found, output the timestamp, action type, attack techniques, and description; if no data is available, clearly indicate missing information.
+      PreviewState: Private
+      PreviewStartTime: 2025-04-29T00:00:00.0000000
+      UserVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      UserVisibility: IfFeatureFlagsEnabled
+      PlannerVisibilityFeatureFlags:
+      - EnablePhishURLBlastRadiusAgent
+      PlannerVisibility: Never
+      Hidden: true
+      Inputs:
+        - Required: true
+          Name: UserUPN
+          Description: A list of one user upn like mscot@woodgrove.ms or multiple. The results from this property will be used in an automation workflow that only accepts a single string. User Upn with surrounded by double quotes, like "meganb@parkcity.alpineskihouse.com", "cam@parkcity.alpineskihouse.com"
+      Settings:
+        Target: Defender
+        Template: |-
+          let users  = dynamic([{{UserUPN}}]);
+          BehaviorInfo 
+          | where AccountUpn in (users)
+          | where TimeGenerated > ago(30d)
+          | project TimeGenerated, AccountUpn, ActionType , AttackTechniques , Description
+
+AgentDefinitions:
+- Name: PhishURLBlastRadiusAgent2025
+  DisplayName: Phish URL Blast Radius Agent 2025
+  Description: Identify users who clicked on a phishing URL and assess the scope of the blast radius. The Agent utilizes the calculation file 'BlastRadiusAgentCalculations.docx', which must be available in the Files section and accessible to the user running the agent.
+  Publisher: Microsoft
+  Product: Security Copilot
+  FeatureFlags:
+  - EnablePhishURLBlastRadiusAgent
+  RequiredSkillsets:
+    - M365
+    - FileUploads
+    - Sentinel
+    - PhishURLBlastRadiusAgent2025
+    - Agents
+  AgentSingleInstanceConstraint: Workspace
+  Triggers:
+    - Name: Default
+      DefaultPeriodSeconds: 0
+      ProcessSkill: PhishURLBlastRadiusAgent2025.PhishURLBlastRadiusAgent
+      Settings:
+        - Name: Url
+          Description: The phishing URL clicked-on
+          Required: true

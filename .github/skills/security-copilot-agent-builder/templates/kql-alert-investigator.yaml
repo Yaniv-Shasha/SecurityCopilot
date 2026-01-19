@@ -1,0 +1,147 @@
+# =============================================================================
+# Security Copilot Agent - KQL-Based Alert Investigation
+# =============================================================================
+# Example: An agent that investigates security alerts using KQL queries
+# =============================================================================
+
+Descriptor:
+  Name: Contoso.SOC.AlertInvestigator-260116
+  DisplayName: Security Alert Investigator
+  Description: Investigates security alerts by querying Defender and Sentinel data, enriching with threat intelligence, and providing analyst recommendations.
+
+SkillGroups:
+  # Main orchestration agent
+  - Format: AGENT
+    Skills:
+      - Name: InvestigateAlert-260116
+        Description: Main agent for investigating security alerts
+        Interfaces:
+          - Agent
+        Inputs:
+          - Name: AlertId
+            Description: The alert ID to investigate
+            Required: true
+        Settings:
+          Model: gpt-4.1
+          Instructions: |
+            <|im_start|>system
+            You are a Security Operations Center (SOC) analyst assistant.
+            Your job is to investigate security alerts thoroughly.
+            
+            For the given alert ID:
+            1) Use GetAlertDetails to retrieve the alert information
+            2) Use GetRelatedEvents to find correlated security events
+            3) Use GetEntityInfo to get details about involved entities (users, devices, IPs)
+            4) Analyze the findings and determine:
+               - Severity assessment (Critical, High, Medium, Low)
+               - Recommended actions
+               - Potential false positive indicators
+            
+            Provide a structured investigation report with:
+            - Alert Summary
+            - Timeline of Events
+            - Affected Entities
+            - Risk Assessment
+            - Recommended Actions
+            <|im_end|>
+            <|im_start|>user
+            Investigate alert: {{AlertId}}
+            <|im_end|>
+        ChildSkills:
+          - GetAlertDetails-260116
+          - GetRelatedEvents-260116
+          - GetEntityInfo-260116
+
+  # KQL skills for data retrieval
+  - Format: KQL
+    Skills:
+      - Name: GetAlertDetails-260116
+        Description: Retrieves detailed information about a specific security alert
+        Inputs:
+          - Name: AlertId
+            Description: The alert ID to look up
+            Required: true
+        Settings:
+          Target: Defender
+          Template: |
+            SecurityAlert
+            | where SystemAlertId == "{{AlertId}}"
+            | project 
+                TimeGenerated,
+                AlertName,
+                AlertSeverity,
+                Description,
+                Tactics,
+                Techniques,
+                Entities,
+                ExtendedProperties
+
+      - Name: GetRelatedEvents-260116
+        Description: Finds security events related to an alert within 1 hour window
+        Inputs:
+          - Name: AlertId
+            Description: The alert ID to find related events for
+            Required: true
+        Settings:
+          Target: Defender
+          Template: |
+            let alertTime = toscalar(
+                SecurityAlert
+                | where SystemAlertId == "{{AlertId}}"
+                | project TimeGenerated
+            );
+            SecurityEvent
+            | where TimeGenerated between ((alertTime - 1h) .. (alertTime + 1h))
+            | summarize EventCount = count() by EventID, Activity
+            | top 20 by EventCount desc
+
+      - Name: GetEntityInfo-260116
+        Description: Gets information about entities involved in an alert
+        Inputs:
+          - Name: AlertId
+            Description: The alert ID to get entity information for
+            Required: true
+        Settings:
+          Target: Defender
+          Template: |
+            SecurityAlert
+            | where SystemAlertId == "{{AlertId}}"
+            | mv-expand Entity = todynamic(Entities)
+            | project 
+                EntityType = Entity.Type,
+                EntityName = coalesce(Entity.Name, Entity.HostName, Entity.Address),
+                EntityDetails = Entity
+
+      - Name: ListRecentAlerts-260116
+        Description: Lists recent high and critical severity alerts for scheduled processing
+        Settings:
+          Target: Defender
+          Template: |
+            SecurityAlert
+            | where TimeGenerated > ago(15m)
+            | where AlertSeverity in ("High", "Critical")
+            | where Status != "Resolved"
+            | project AlertId = SystemAlertId, AlertName, AlertSeverity, TimeGenerated
+            | top 10 by TimeGenerated desc
+
+AgentDefinitions:
+  - Name: AlertInvestigator-260116
+    DisplayName: Security Alert Investigator
+    Description: Automatically investigates security alerts and provides analyst recommendations
+    Publisher: Contoso
+    Product: SOC
+    RequiredSkillsets:
+      - Contoso.SOC.AlertInvestigator-260116
+    AgentSingleInstanceConstraint: Workspace
+    Settings:
+      - Name: SeverityFilter
+        Label: Minimum Severity
+        Description: Minimum alert severity to investigate (Critical, High, Medium, Low)
+        HintText: Enter High to investigate High and Critical alerts
+        SettingType: String
+        Required: false
+    Triggers:
+      - Name: ScheduledInvestigation
+        DefaultPeriodSeconds: 900  # Every 15 minutes
+        FetchSkill: Contoso.SOC.AlertInvestigator-260116.ListRecentAlerts-260116
+        ProcessSkill: Contoso.SOC.AlertInvestigator-260116.InvestigateAlert-260116

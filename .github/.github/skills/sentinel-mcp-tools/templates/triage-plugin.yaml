@@ -1,0 +1,21 @@
+# =============================================================================
+# Sentinel MCP Triage Plugin
+# =============================================================================
+# Use this template to add Sentinel's triage MCP tools to your agent
+# =============================================================================
+
+Descriptor:
+  Name: SentinelTriage
+  DisplayName: Sentinel Triage Tools
+  Description: Microsoft Sentinel MCP tools for incident triage and threat hunting
+  DescriptionForModel: Tools for rapid incident triage, alert prioritization, and threat hunting over security data. Use when investigating incidents or hunting for threats.
+
+SkillGroups:
+  - Format: MCP
+    Settings:
+      Endpoint: https://sentinel.microsoft.com/mcp/triage
+      TokenScope: 4500ebfb-89b6-4b14-a480-7f749797bfcd/.default
+      UseStreamableHttp: true
+      UsePluginAuth: false
+      AllowedTools: get_incidents,triage_incident,hunt_threats,prioritize_alerts
+      TimeoutInSeconds: 300

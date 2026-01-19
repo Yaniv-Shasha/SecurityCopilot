@@ -1,0 +1,126 @@
+# =============================================================================
+# Security Copilot Agent - Interactive Chat Agent
+# =============================================================================
+# Example: An interactive agent for security Q&A with suggested prompts
+# =============================================================================
+
+Descriptor:
+  Name: Contoso.Security.InteractiveAnalyst-260116
+  DisplayName: Interactive Security Analyst
+  Description: An interactive chat agent that helps security analysts with questions, threat hunting, and investigation guidance.
+
+SkillGroups:
+  - Format: AGENT
+    Skills:
+      - Name: SecurityChatAgent-260116
+        Description: Interactive chat agent for security analysis
+        Interfaces:
+          - InteractiveAgent
+        Inputs:
+          - Name: Question
+            Description: The analyst's question or request
+            Required: true
+        Settings:
+          Model: gpt-4.1
+          Instructions: |
+            <|im_start|>system
+            You are an expert security analyst assistant. Help analysts with:
+            - Threat hunting queries and techniques
+            - Incident investigation guidance
+            - Security best practices
+            - Interpreting alerts and events
+            - Writing KQL queries
+            
+            When asked about threats, use available threat intelligence tools.
+            When asked about specific entities, use lookup tools.
+            Always provide actionable, specific guidance.
+            <|im_end|>
+            <|im_start|>user
+            {{Question}}
+            <|im_end|>
+        ChildSkills:
+          - ThreatLookup-260116
+          - QueryHelper-260116
+        SuggestedPrompts:
+          - Prompt: "How do I hunt for lateral movement in my environment?"
+            Title: "Lateral Movement Hunting"
+            Personas:
+              - SecurityAnalyst
+            IsStarterPrompt: true
+          - Prompt: "Help me investigate suspicious PowerShell activity"
+            Title: "PowerShell Investigation"
+            Personas:
+              - SecurityAnalyst
+            IsStarterPrompt: true
+          - Prompt: "What are the top MITRE ATT&CK techniques I should monitor?"
+            Title: "MITRE ATT&CK Priorities"
+            Personas:
+              - SecurityAnalyst
+            IsStarterPrompt: false
+
+  - Format: GPT
+    Skills:
+      - Name: ThreatLookup-260116
+        DisplayName: Threat Intelligence Lookup
+        Description: Provides context about known threats, TTPs, and indicators
+        Inputs:
+          - Name: Query
+            Description: Threat, technique, or indicator to look up
+            Required: true
+        Settings:
+          ModelName: gpt-4.1
+          Template: |-
+            <|im_start|>system
+            You are a threat intelligence expert. Provide detailed information about:
+            - Known threat actors and their TTPs
+            - MITRE ATT&CK techniques and mitigations
+            - Common indicators of compromise patterns
+            - Detection strategies
+            
+            Be specific and actionable in your responses.
+            <|im_end|>
+            <|im_start|>user
+            {{Query}}
+            <|im_end|>
+
+      - Name: QueryHelper-260116
+        DisplayName: KQL Query Helper
+        Description: Helps write and explain KQL queries for security hunting
+        Inputs:
+          - Name: Request
+            Description: Description of what the analyst wants to query
+            Required: true
+        Settings:
+          ModelName: gpt-4.1
+          Template: |-
+            <|im_start|>system
+            You are a KQL (Kusto Query Language) expert for Microsoft security products.
+            Help analysts write effective queries for:
+            - Microsoft Defender
+            - Microsoft Sentinel
+            - Advanced Hunting
+            
+            Provide:
+            1. The KQL query
+            2. Explanation of what it does
+            3. Tips for customization
+            4. Common variations
+            <|im_end|>
+            <|im_start|>user
+            {{Request}}
+            <|im_end|>
+
+AgentDefinitions:
+  - Name: InteractiveSecurityAnalyst-260116
+    DisplayName: Interactive Security Analyst
+    Description: Chat-based security analyst assistant for threat hunting and investigation
+    Publisher: Contoso
+    Product: Security
+    RequiredSkillsets:
+      - Contoso.Security.InteractiveAnalyst-260116
+    AgentSingleInstanceConstraint: None
+    Triggers:
+      - Name: ChatTrigger
+        DefaultPeriodSeconds: 0
+        ProcessSkill: Contoso.Security.InteractiveAnalyst-260116.SecurityChatAgent-260116
+    PromptSkill: Contoso.Security.InteractiveAnalyst-260116.SecurityChatAgent-260116

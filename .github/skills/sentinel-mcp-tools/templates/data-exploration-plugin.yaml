@@ -1,0 +1,21 @@
+# =============================================================================
+# Sentinel MCP Data Exploration Plugin
+# =============================================================================
+# Use this template to add Sentinel's data exploration MCP tools to your agent
+# =============================================================================
+
+Descriptor:
+  Name: SentinelDataExploration
+  DisplayName: Sentinel Data Exploration Tools
+  Description: Microsoft Sentinel MCP tools for exploring security data
+  DescriptionForModel: Tools for searching Sentinel tables, querying the data lake, and analyzing security entities like users and URLs. Use for security investigations and threat hunting.
+
+SkillGroups:
+  - Format: MCP
+    Settings:
+      Endpoint: https://sentinel.microsoft.com/mcp/data-exploration
+      TokenScope: 4500ebfb-89b6-4b14-a480-7f749797bfcd/.default
+      UseStreamableHttp: true
+      UsePluginAuth: false
+      AllowedTools: query_lake,search_tables,analyze_user_entity,analyze_url_entity,get_entity_analysis,list_sentinel_workspaces
+      TimeoutInSeconds: 300

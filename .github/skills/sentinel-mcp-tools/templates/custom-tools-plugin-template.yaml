@@ -1,0 +1,55 @@
+# =============================================================================
+# Custom Sentinel MCP Tools Plugin Template
+# =============================================================================
+# Use this template when you've created custom MCP tools from KQL queries
+# in the Advanced Hunting portal
+# =============================================================================
+
+Descriptor:
+  Name: MyCustomSentinelTools
+  DisplayName: Custom Sentinel MCP Tools
+  Description: Custom MCP tools created from saved KQL queries
+  DescriptionForModel: Custom security tools for specific investigation workflows. Includes tools for querying alerts, analyzing user behavior, and investigating specific threat scenarios.
+
+SkillGroups:
+  - Format: MCP
+    Settings:
+      # Replace with your custom tool collection endpoint
+      # Format: https://<your-collection-endpoint>/mcp
+      Endpoint: https://sentinel.microsoft.com/mcp/custom/<your-collection-name>
+      TokenScope: 4500ebfb-89b6-4b14-a480-7f749797bfcd/.default
+      UseStreamableHttp: true
+      UsePluginAuth: false
+      # List only the tools you want to expose to the agent
+      AllowedTools: GetRecentAlerts,InvestigateUser,QueryNetworkEvents
+      TimeoutInSeconds: 300
+
+# =============================================================================
+# NOTES ON CREATING CUSTOM TOOLS
+# =============================================================================
+# 
+# 1. Go to Advanced Hunting in Microsoft Defender portal
+# 
+# 2. Write your KQL query with parameters using {ParameterName} syntax:
+#    
+#    SecurityAlert
+#    | where TimeGenerated > ago({LookbackHours}h)
+#    | where UserPrincipalName contains "{UserName}"
+#    | project TimeGenerated, AlertName, Severity, UserPrincipalName
+#    | top 50 by TimeGenerated desc
+#
+# 3. Select "Save as tool" from the context menu or query box menu
+#
+# 4. Configure the tool:
+#    - Name: GetUserAlerts (use PascalCase, descriptive)
+#    - Description: "Retrieves security alerts for a specific user within 
+#                    a configurable time window. Use when investigating 
+#                    user-related security incidents."
+#    - Collection: Create new or add to existing
+#    - Parameters:
+#      - LookbackHours: "Number of hours to look back (default: 24)"
+#      - UserName: "Username or partial username to search for"
+#
+# 5. Add the tool name to AllowedTools in this YAML
+#
+# =============================================================================

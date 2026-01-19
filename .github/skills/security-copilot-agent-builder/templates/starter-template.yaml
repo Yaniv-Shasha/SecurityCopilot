@@ -1,0 +1,73 @@
+# =============================================================================
+# Security Copilot Agent - Minimal Starter Template
+# =============================================================================
+# Copy this template and customize for your use case
+# =============================================================================
+
+Descriptor:
+  Name: YourCompany.YourProduct.YourPurpose-YYMMDD
+  DisplayName: Your Agent Display Name
+  Description: Brief description of what your agent does
+
+SkillGroups:
+  - Format: AGENT
+    Skills:
+      - Name: MainAgent-v1
+        Description: Main orchestration agent
+        Interfaces:
+          - Agent
+        Inputs:
+          - Name: UserInput
+            Description: The primary input for your agent
+            Required: true
+        Settings:
+          Model: gpt-4.1
+          Instructions: |
+            <|im_start|>system
+            You are an AI agent that [describe your agent's purpose].
+            
+            Follow these steps:
+            1) [First step]
+            2) [Second step]
+            3) [Third step]
+            
+            Always provide clear, actionable results.
+            <|im_end|>
+            <|im_start|>user
+            {{UserInput}}
+            <|im_end|>
+        ChildSkills:
+          - HelperSkill-v1
+
+  - Format: GPT
+    Skills:
+      - Name: HelperSkill-v1
+        DisplayName: Helper Skill
+        Description: A helper skill for text processing
+        Inputs:
+          - Name: Text
+            Description: Text to process
+            Required: true
+        Settings:
+          ModelName: gpt-4.1
+          Template: |-
+            <|im_start|>system
+            [Your processing instructions here]
+            <|im_end|>
+            <|im_start|>user
+            {{Text}}
+            <|im_end|>
+
+AgentDefinitions:
+  - Name: YourAgentName-v1
+    DisplayName: Your Agent Display Name
+    Description: What your agent does
+    Publisher: YourCompany
+    Product: YourProduct
+    RequiredSkillsets:
+      - YourCompany.YourProduct.YourPurpose-YYMMDD
+    AgentSingleInstanceConstraint: None
+    Triggers:
+      - Name: ManualTrigger
+        DefaultPeriodSeconds: 0
+        ProcessSkill: YourCompany.YourProduct.YourPurpose-YYMMDD.MainAgent-v1
