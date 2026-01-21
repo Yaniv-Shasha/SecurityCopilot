@@ -10,7 +10,7 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 colorclass==2.2.2
 compressed_rtf==1.0.6
-cryptography==43.0.0
+cryptography==43.0.1
 easygui==0.98.3
 ebcdic==1.1.1
 extract-msg==0.48.7
